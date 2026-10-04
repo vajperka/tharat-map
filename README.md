@@ -1,3 +1,7 @@
+# THARAT Resource Map V5.4
+
+Cinematic UI redesign based on the approved visual mockup. Preserves the existing Next.js + Neon + Auth + Vercel Blob + CZ/EN functionality.
+
 # THARAT Resource Map V5
 
 Full-stack Next.js project for Vercel.
