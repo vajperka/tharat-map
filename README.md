@@ -76,7 +76,7 @@ UPDATE users SET role='admin' WHERE lower(email)=lower('your@email.cz');
 
 ## Current map data
 The database starts empty on purpose. No unverified Tharat coordinates were invented.
-The supplied `public/tharat-map.jpg` is the temporary map background from the earlier prototype.
+The supplied `public/tharat-map.png` is the temporary map background from the earlier prototype.
 
 ## V5.1
 - Viditelné tlačítko `+ PŘIDAT MARKER`.
@@ -88,3 +88,10 @@ The supplied `public/tharat-map.jpg` is the temporary map background from the ea
 - Běžný user vždy vytváří `pending` marker.
 - Admin může zvolit `Publikovat okamžitě`; oprávnění kontroluje server.
 - Není potřeba žádná změna databázového schématu oproti V5.
+
+## V5.1.2
+- Leaflet workspace fills the entire area to the right of the filter sidebar.
+- Removed fixed/limited map sizing; map canvas is 100% width and height.
+- Dark map background replaces Leaflet's default light gray background.
+- Search and `+ PŘIDAT MARKER` are grouped together in the upper-left overlay.
+- Leaflet invalidates its size after mount and on browser resize.
