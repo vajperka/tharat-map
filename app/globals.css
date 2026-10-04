@@ -97,3 +97,9 @@ body{background:#030813;background-image:radial-gradient(circle at 72% 0%,rgba(2
 .brand-mark{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 42px;width:42px!important;height:42px!important;overflow:visible;background:rgba(2,10,20,.55);transform:rotate(45deg);border:2px solid var(--cyan);box-shadow:0 0 20px rgba(22,232,255,.38),inset 0 0 14px rgba(22,232,255,.12)}
 .brand-mark img{position:absolute;width:62px;height:62px;max-width:none;object-fit:contain;transform:rotate(-45deg);filter:drop-shadow(0 0 7px rgba(50,255,105,.28));pointer-events:none;user-select:none}
 @media(max-width:900px){.brand-mark{flex-basis:38px;width:38px!important;height:38px!important}.brand-mark img{width:56px;height:56px}}
+
+/* V5.5.5 - crisp SVG language flags */
+.lang-flag{display:block;width:22px;height:15px;object-fit:cover;border-radius:2px;flex:0 0 auto;box-shadow:0 0 0 1px rgba(255,255,255,.12),0 2px 7px rgba(0,0,0,.32)}
+.language-button .lang-flag{width:23px;height:15px}
+.language-menu button .lang-flag{width:24px;height:16px}
+.language-menu button{grid-template-columns:30px 1fr 18px}
