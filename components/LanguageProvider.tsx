@@ -6,7 +6,7 @@ export type Language = "cs" | "en";
 
 const translations = {
   cs: {
-    common:{login:"Přihlásit",register:"Registrace",logout:"Odhlásit",admin:"ADMIN",cancel:"ZRUŠIT",delete:"SMAZAT",backMap:"← Zpět na mapu",noNote:"Bez poznámky."},
+    common:{login:"Přihlásit",register:"Registrace",logout:"Odhlásit",admin:"ADMINISTRACE",cancel:"ZRUŠIT",delete:"SMAZAT",backMap:"← Zpět na mapu",noNote:"Bez poznámky."},
     header:{map:"INTERACTIVE RESOURCE MAP",language:"Jazyk"},
     map:{filters:"FILTRY MAPY",clear:"VYMAZAT",farming:"⚡ DŮLEŽITÉ PRO FARMENÍ",resources:"ZDROJE",locations:"LOKACE",help:"Registrovaní uživatelé mohou navrhovat nové lokace. Veřejné jsou až po schválení adminem.",reset:"RESET FILTRŮ",quick:"RYCHLÉ AKCE",legend:"LEGENDA",approvedMarker:"Schválený marker",pendingMarker:"Čeká na schválení",yourMarker:"Tvůj marker",fitMap:"Zobrazit celou mapu",search:"Hledat zdroje, tvory, jeskyně…",add:"＋ PŘIDAT MARKER",pick:"📍 Klikni na mapu a vyber umístění markeru",done:"HOTOVO",published:"MARKER PUBLIKOVÁN",verified:"✓ OVĚŘENO",openPhoto:"↗ OTEVŘÍT FOTKU",photoAlt:"Fotka lokace"},
     types:{metal:"Kov",richmetal:"Bohatý kov",crystal:"Krystal",obsidian:"Obsidián",oil:"Olej",oilvein:"Ropná žíla",sulfur:"Síra",silica:"Křemičité perly",blackpearls:"Černé perly",element:"Elementová žíla",cave:"Jeskyně",artifact:"Artefakty",boss:"Bossové",loot:"Loot",base:"Místa pro základnu",creature:"Výskyt tvorů"},
@@ -17,7 +17,7 @@ const translations = {
     admin:{kicker:"THARAT CONTROL CENTER",title:"Admin Dashboard",pending:"ČEKAJÍCÍ",approved:"SCHVÁLENÉ",rejected:"ZAMÍTNUTÉ",all:"CELKEM",empty:"V této kategorii zatím nic není.",unknown:"neznámý uživatel",approve:"✓ SCHVÁLIT",reject:"✕ ZAMÍTNOUT",delete:"SMAZAT",confirmDelete:"Opravdu marker smazat?",tabs:{pending:"ČEKAJÍCÍ",approved:"SCHVÁLENÉ",rejected:"ZAMÍTNUTÉ",all:"VŠE"}}
   },
   en: {
-    common:{login:"Log in",register:"Register",logout:"Log out",admin:"ADMIN",cancel:"CANCEL",delete:"DELETE",backMap:"← Back to map",noNote:"No notes."},
+    common:{login:"Log in",register:"Register",logout:"Log out",admin:"ADMINISTRATION",cancel:"CANCEL",delete:"DELETE",backMap:"← Back to map",noNote:"No notes."},
     header:{map:"INTERACTIVE RESOURCE MAP",language:"Language"},
     map:{filters:"MAP FILTERS",clear:"CLEAR",farming:"⚡ FARMING ESSENTIALS",resources:"RESOURCES",locations:"LOCATIONS",help:"Registered users can suggest new locations. They become public after admin approval.",reset:"RESET FILTERS",quick:"QUICK ACTIONS",legend:"LEGEND",approvedMarker:"Approved marker",pendingMarker:"Pending approval",yourMarker:"Your marker",fitMap:"Fit full map",search:"Search resources, creatures, caves…",add:"＋ ADD MARKER",pick:"📍 Click the map to choose the marker location",done:"DONE",published:"MARKER PUBLISHED",verified:"✓ VERIFIED",openPhoto:"↗ OPEN PHOTO",photoAlt:"Location photo"},
     types:{metal:"Metal",richmetal:"Rich Metal",crystal:"Crystal",obsidian:"Obsidian",oil:"Oil",oilvein:"Oil Vein",sulfur:"Sulfur",silica:"Silica Pearls",blackpearls:"Black Pearls",element:"Element Vein",cave:"Caves",artifact:"Artifacts",boss:"Bosses",loot:"Loot",base:"Base Spots",creature:"Creature Spawn"},
