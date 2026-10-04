@@ -95,3 +95,12 @@ The supplied `public/tharat-map.png` is the temporary map background from the ea
 - Dark map background replaces Leaflet's default light gray background.
 - Search and `+ PŘIDAT MARKER` are grouped together in the upper-left overlay.
 - Leaflet invalidates its size after mount and on browser resize.
+
+## V5.2 – fotografie markerů
+- Registrovaný uživatel může přiložit 1 fotografii k markeru.
+- JPG, PNG nebo WebP, maximálně 5 MB.
+- Upload probíhá přímo z prohlížeče do Vercel Blob přes zabezpečený client-upload token.
+- V Neonu se ukládá pouze `image_url`.
+- Admin vidí fotografii před schválením.
+- Po schválení se fotografie zobrazuje v detailu markeru.
+- Vyžaduje sloupec `markers.image_url TEXT` (už přidán v DB) a Blob store připojený k Vercel projektu.

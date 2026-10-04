@@ -49,7 +49,7 @@ export default function AdminDashboard() {
               <div className="marker-type">{m.type.toUpperCase()}</div>
               <h3>{m.name}</h3>
               <div className="moderation-meta">LAT {Number(m.lat).toFixed(2)} · LON {Number(m.lon).toFixed(2)} · {m.submitter_name || m.submitter_email || "neznámý uživatel"}</div>
-              <p>{m.note || "Bez poznámky."}</p>
+              <p>{m.note || "Bez poznámky."}</p>{m.image_url && <a href={m.image_url} target="_blank" rel="noreferrer"><img className="moderation-photo" src={m.image_url} alt={`Fotka ${m.name}`} /></a>}
             </div>
             <div className="moderation-actions">
               {m.approval_status !== "approved" && <button className="approve" disabled={busy===m.id} onClick={()=>action(m.id,"approve")}>✓ SCHVÁLIT</button>}

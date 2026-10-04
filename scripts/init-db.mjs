@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS markers (
   lat numeric(5,2) NOT NULL CHECK (lat BETWEEN 0 AND 100),
   lon numeric(5,2) NOT NULL CHECK (lon BETWEEN 0 AND 100),
   note varchar(1000) NOT NULL DEFAULT '',
+  image_url text,
   status varchar(20) NOT NULL DEFAULT 'unverified' CHECK (status IN ('verified','community','unverified')),
   approval_status varchar(20) NOT NULL DEFAULT 'pending' CHECK (approval_status IN ('pending','approved','rejected')),
   submitted_by uuid REFERENCES users(id) ON DELETE SET NULL,

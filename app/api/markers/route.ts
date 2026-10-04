@@ -14,6 +14,7 @@ const markerSchema = z.object({
   lat: z.number().min(0).max(100),
   lon: z.number().min(0).max(100),
   note: z.string().trim().max(1000).default(""),
+  imageUrl: z.string().url().max(2048).refine((url) => /^https:\/\/[^/]+\.public\.blob\.vercel-storage\.com\//.test(url), "Neplatná Blob URL").nullable().optional().default(null),
   publishImmediately: z.boolean().optional().default(false),
 });
 
@@ -21,7 +22,7 @@ export async function GET() {
   const db = sql();
   const rows = await db`
     SELECT m.id, m.type, m.name, m.lat::float8 AS lat, m.lon::float8 AS lon,
-           m.note, m.status, m.approval_status, m.submitted_by, m.created_at
+           m.note, m.image_url, m.status, m.approval_status, m.submitted_by, m.created_at
     FROM markers m
     WHERE m.approval_status='approved'
     ORDER BY m.created_at ASC
@@ -41,14 +42,14 @@ export async function POST(req: Request) {
     const publishNow = session.user.role === "admin" && body.publishImmediately === true;
     const rows = publishNow
       ? await db`
-          INSERT INTO markers (type, name, lat, lon, note, status, approval_status, submitted_by, reviewed_by, reviewed_at)
-          VALUES (${body.type}, ${body.name}, ${body.lat}, ${body.lon}, ${body.note}, 'verified', 'approved', ${session.user.id}, ${session.user.id}, now())
-          RETURNING id, type, name, lat::float8 AS lat, lon::float8 AS lon, note, status, approval_status, submitted_by, created_at
+          INSERT INTO markers (type, name, lat, lon, note, image_url, status, approval_status, submitted_by, reviewed_by, reviewed_at)
+          VALUES (${body.type}, ${body.name}, ${body.lat}, ${body.lon}, ${body.note}, ${body.imageUrl}, 'verified', 'approved', ${session.user.id}, ${session.user.id}, now())
+          RETURNING id, type, name, lat::float8 AS lat, lon::float8 AS lon, note, image_url, status, approval_status, submitted_by, created_at
         `
       : await db`
-          INSERT INTO markers (type, name, lat, lon, note, status, approval_status, submitted_by)
-          VALUES (${body.type}, ${body.name}, ${body.lat}, ${body.lon}, ${body.note}, 'unverified', 'pending', ${session.user.id})
-          RETURNING id, type, name, lat::float8 AS lat, lon::float8 AS lon, note, status, approval_status, submitted_by, created_at
+          INSERT INTO markers (type, name, lat, lon, note, image_url, status, approval_status, submitted_by)
+          VALUES (${body.type}, ${body.name}, ${body.lat}, ${body.lon}, ${body.note}, ${body.imageUrl}, 'unverified', 'pending', ${session.user.id})
+          RETURNING id, type, name, lat::float8 AS lat, lon::float8 AS lon, note, image_url, status, approval_status, submitted_by, created_at
         `;
     return NextResponse.json(rows[0], { status: 201 });
   } catch (error: any) {

@@ -8,6 +8,7 @@ export type Marker = {
   lat: number;
   lon: number;
   note: string;
+  image_url: string | null;
   status: "verified" | "community" | "unverified";
   approval_status: ApprovalStatus;
   submitted_by: string | null;
