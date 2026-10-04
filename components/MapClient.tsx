@@ -1,134 +1,38 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { Marker } from "@/lib/types";
 
-const TYPES:any = {
-  resources:[
-    ["metal","Metal","⛏","#aeb8c5"],["richmetal","Rich Metal","◆","#e4c35a"],["crystal","Crystal","◆","#70d7ff"],
-    ["obsidian","Obsidian","⬟","#a86cff"],["oil","Oil","●","#d8943f"],["oilvein","Oil Vein","⛽","#ff9e3d"],
-    ["sulfur","Sulfur","●","#f0d84f"],["silica","Silica Pearls","◉","#a7e9ff"],["blackpearls","Black Pearls","◉","#8c62d8"],
-    ["element","Element Vein","✦","#27e1c1"]
-  ],
-  locations:[
-    ["cave","Caves","⌂","#9da9b8"],["artifact","Artifacts","◇","#b05cff"],["boss","Bosses","☠","#ff475d"],
-    ["loot","Loot","▣","#58a6ff"],["base","Base Spots","⌖","#6fd69b"],["creature","Creature Spawn","◌","#ef7fce"]
-  ]
-};
-const TYPE_MAP:any = {};
-Object.values(TYPES).flat().forEach((x:any)=>TYPE_MAP[x[0]]={id:x[0],name:x[1],icon:x[2],color:x[3]});
+const TYPES:any={resources:[["metal","Metal","⛏","#aeb8c5"],["richmetal","Rich Metal","◆","#e4c35a"],["crystal","Crystal","◆","#70d7ff"],["obsidian","Obsidian","⬟","#a86cff"],["oil","Oil","●","#d8943f"],["oilvein","Oil Vein","⛽","#ff9e3d"],["sulfur","Sulfur","●","#f0d84f"],["silica","Silica Pearls","◉","#a7e9ff"],["blackpearls","Black Pearls","◉","#8c62d8"],["element","Element Vein","✦","#27e1c1"]],locations:[["cave","Caves","⌂","#9da9b8"],["artifact","Artifacts","◇","#b05cff"],["boss","Bosses","☠","#ff475d"],["loot","Loot","▣","#58a6ff"],["base","Base Spots","⌖","#6fd69b"],["creature","Creature Spawn","◌","#ef7fce"]]};
+const TYPE_MAP:any={};Object.values(TYPES).flat().forEach((x:any)=>TYPE_MAP[x[0]]={name:x[1],icon:x[2],color:x[3]});
+type Mode="idle"|"auth"|"select"|"edit"|"discard";
+type Draft={type:string;name:string;lat:number;lon:number;note:string;publishImmediately:boolean};
 
-export default function MapClient({ user }: { user:any }) {
-  const mapNode = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<any>(null);
-  const layerRef = useRef<any[]>([]);
-  const leafletRef = useRef<any>(null);
-  const [markers,setMarkers] = useState<Marker[]>([]);
-  const [enabled,setEnabled] = useState<Set<string>>(new Set(Object.keys(TYPE_MAP)));
-  const [query,setQuery] = useState("");
-  const [coords,setCoords] = useState({lat:"—",lon:"—"});
-  const [selected,setSelected] = useState<Marker|null>(null);
-  const [form,setForm] = useState<any>(null);
-  const [message,setMessage] = useState("");
-
-  useEffect(()=>{ fetch("/api/markers",{cache:"no-store"}).then(r=>r.json()).then(setMarkers).catch(()=>{}); },[]);
-
-  useEffect(()=>{
-    let cancelled=false;
-    (async()=>{
-      if(!mapNode.current || mapRef.current) return;
-      const L = await import("leaflet");
-      if(cancelled) return;
-      leafletRef.current=L;
-      const map=L.map(mapNode.current,{crs:L.CRS.Simple,minZoom:-2,maxZoom:4,zoomControl:false,attributionControl:false});
-      L.imageOverlay("/tharat-map.jpg",[[0,0],[100,100]]).addTo(map);
-      map.fitBounds([[0,0],[100,100]],{padding:[10,10]});
-      map.setMaxBounds([[-12,-12],[112,112]]);
-      map.on("mousemove",(e:any)=>{
-        setCoords({lat:Math.max(0,Math.min(100,100-e.latlng.lat)).toFixed(2),lon:Math.max(0,Math.min(100,e.latlng.lng)).toFixed(2)});
-      });
-      map.on("contextmenu",(e:any)=>{
-        const lat=Math.max(0,Math.min(100,100-e.latlng.lat));
-        const lon=Math.max(0,Math.min(100,e.latlng.lng));
-        if(user) setForm({type:"oilvein",name:"",lat:+lat.toFixed(2),lon:+lon.toFixed(2),note:""});
-        else setMessage("Pro přidání lokace se nejdřív přihlas.");
-      });
-      mapRef.current=map;
-    })();
-    return ()=>{cancelled=true};
-  },[user]);
-
-  const visible=useMemo(()=>markers.filter(m=>enabled.has(m.type) && (!query || `${m.name} ${m.note} ${TYPE_MAP[m.type]?.name||""}`.toLowerCase().includes(query.toLowerCase()))),[markers,enabled,query]);
-
-  useEffect(()=>{
-    const L=leafletRef.current, map=mapRef.current;
-    if(!L||!map)return;
-    layerRef.current.forEach(x=>map.removeLayer(x)); layerRef.current=[];
-    visible.forEach(item=>{
-      const t=TYPE_MAP[item.type]||TYPE_MAP.base;
-      const icon=L.divIcon({className:"",html:`<div class="map-marker" style="color:${t.color};border-color:${t.color}88">${t.icon}</div>`,iconSize:[34,34],iconAnchor:[17,17]});
-      const m=L.marker([100-Number(item.lat),Number(item.lon)],{icon}).addTo(map);
-      m.bindTooltip(`${item.name}<br><small>${Number(item.lat).toFixed(2)} / ${Number(item.lon).toFixed(2)}</small>`,{direction:"top",offset:[0,-14]});
-      m.on("click",()=>setSelected(item)); layerRef.current.push(m);
-    });
-  },[visible]);
-
-  function toggle(id:string){ setEnabled(prev=>{const n=new Set(prev);n.has(id)?n.delete(id):n.add(id);return n}) }
-  async function submitMarker(e:React.FormEvent){
-    e.preventDefault();
-    const r=await fetch("/api/markers",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(form)});
-    const d=await r.json();
-    if(!r.ok){setMessage(d.error||"Uložení selhalo.");return}
-    setForm(null); setMessage("Lokace byla odeslána adminovi ke schválení.");
-    setTimeout(()=>setMessage(""),3500);
-  }
-
-  return (
-    <div className="map-shell">
-      <aside className="map-sidebar">
-        <div className="side-title"><span>MAP FILTERS</span><button onClick={()=>setEnabled(new Set())}>CLEAR</button></div>
-        <button className="quick-filter" onClick={()=>setEnabled(new Set(["metal","richmetal","crystal","obsidian","oil","oilvein","silica","blackpearls"]))}>⚡ FARMING ESSENTIALS</button>
-        {Object.entries(TYPES).map(([cat,arr]:any)=>(
-          <section className="filter-section" key={cat}>
-            <h3>⌄ {cat.toUpperCase()}</h3>
-            {arr.map((x:any)=>{
-              const count=markers.filter(m=>m.type===x[0]).length;
-              return <button key={x[0]} className={`filter-row ${enabled.has(x[0])?"active":""}`} onClick={()=>toggle(x[0])}>
-                <i style={{background:x[3],color:x[3]}}></i><span>{x[1]}</span><b>{count}</b>
-              </button>
-            })}
-          </section>
-        ))}
-        <div className="sidebar-help">Pravý klik na mapu = navrhnout lokaci. Nové body se zobrazí až po schválení adminem.</div>
-      </aside>
-      <div className="map-main">
-        <div className="map-search"><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Hledat resources, creatures, caves…" /></div>
-        <div ref={mapNode} className="leaflet-map" />
-        <div className="coords-box"><span>LAT</span><b>{coords.lat}</b><span>LON</span><b>{coords.lon}</b></div>
-        {message && <div className="toast-msg">{message}</div>}
-      </div>
-
-      {selected && <aside className="marker-detail">
-        <button className="detail-x" onClick={()=>setSelected(null)}>×</button>
-        <div className="kicker">{TYPE_MAP[selected.type]?.name || selected.type}</div>
-        <h2>{selected.name}</h2>
-        <div className="verified">✓ VERIFIED</div>
-        <div className="coord-grid"><div><span>LATITUDE</span><b>{Number(selected.lat).toFixed(2)}</b></div><div><span>LONGITUDE</span><b>{Number(selected.lon).toFixed(2)}</b></div></div>
-        <p>{selected.note || "Bez poznámky."}</p>
-        <button className="accent-button wide" onClick={()=>navigator.clipboard.writeText(`LAT ${Number(selected.lat).toFixed(2)}, LON ${Number(selected.lon).toFixed(2)}`)}>KOPÍROVAT LAT / LON</button>
-      </aside>}
-
-      {form && <div className="modal-bg">
-        <form className="marker-form" onSubmit={submitMarker}>
-          <h2>Navrhnout lokaci</h2>
-          <p>Po odeslání ji uvidí admin. Veřejná bude až po schválení.</p>
-          <label>TYP<select value={form.type} onChange={e=>setForm({...form,type:e.target.value})}>{Object.values(TYPES).flat().map((x:any)=><option key={x[0]} value={x[0]}>{x[2]} {x[1]}</option>)}</select></label>
-          <label>NÁZEV<input required maxLength={100} value={form.name} onChange={e=>setForm({...form,name:e.target.value})} /></label>
-          <div className="two"><label>LAT<input type="number" step=".01" min="0" max="100" value={form.lat} onChange={e=>setForm({...form,lat:+e.target.value})} /></label><label>LON<input type="number" step=".01" min="0" max="100" value={form.lon} onChange={e=>setForm({...form,lon:+e.target.value})} /></label></div>
-          <label>POZNÁMKA<textarea maxLength={1000} value={form.note} onChange={e=>setForm({...form,note:e.target.value})} /></label>
-          <div className="form-actions"><button type="button" className="ghost-button" onClick={()=>setForm(null)}>ZRUŠIT</button><button className="accent-button">ODESLAT KE SCHVÁLENÍ</button></div>
-        </form>
-      </div>}
-    </div>
-  );
+export default function MapClient({user}:{user:any}){
+ const router=useRouter(), mapNode=useRef<HTMLDivElement>(null), mapRef=useRef<any>(null), leaflet=useRef<any>(null), layers=useRef<any[]>([]), temp=useRef<any>(null), modeRef=useRef<Mode>("idle"), draftRef=useRef<Draft|null>(null);
+ const [markers,setMarkers]=useState<Marker[]>([]),[enabled,setEnabled]=useState(new Set(Object.keys(TYPE_MAP))),[query,setQuery]=useState(""),[coords,setCoords]=useState({lat:"—",lon:"—"}),[selected,setSelected]=useState<Marker|null>(null),[mode,setMode]=useState<Mode>("idle"),[draft,setDraft]=useState<Draft|null>(null),[errors,setErrors]=useState<any>({}),[busy,setBusy]=useState(false),[message,setMessage]=useState("");
+ useEffect(()=>{modeRef.current=mode},[mode]); useEffect(()=>{draftRef.current=draft},[draft]);
+ async function load(){const r=await fetch("/api/markers",{cache:"no-store"});if(r.ok)setMarkers(await r.json())} useEffect(()=>{load()},[]);
+ const game=(ll:any)=>({lat:Math.max(0,Math.min(100,100-ll.lat)),lon:Math.max(0,Math.min(100,ll.lng))});
+ function clearTemp(){if(temp.current&&mapRef.current){mapRef.current.removeLayer(temp.current);temp.current=null}}
+ function showTemp(lat:number,lon:number){const L=leaflet.current;if(!L)return;clearTemp();temp.current=L.marker([100-lat,lon],{interactive:false,icon:L.divIcon({className:"",html:'<div class="temp-map-marker">＋</div>',iconSize:[44,44],iconAnchor:[22,22]})}).addTo(mapRef.current)}
+ function choose(ll:any){if(modeRef.current!=="select")return;const p=game(ll),old=draftRef.current;const d={type:old?.type||"oilvein",name:old?.name||"",note:old?.note||"",lat:+p.lat.toFixed(2),lon:+p.lon.toFixed(2),publishImmediately:old?.publishImmediately??user?.role==="admin"};setDraft(d);showTemp(d.lat,d.lon);setMode("edit");setErrors({})}
+ useEffect(()=>{(async()=>{if(!mapNode.current||mapRef.current)return;const L=await import("leaflet");leaflet.current=L;const map=L.map(mapNode.current,{crs:L.CRS.Simple,minZoom:-2,maxZoom:4,zoomControl:false,attributionControl:false});L.imageOverlay("/tharat-map.jpg",[[0,0],[100,100]]).addTo(map);map.fitBounds([[0,0],[100,100]]);map.setMaxBounds([[-12,-12],[112,112]]);map.on("mousemove",(e:any)=>{const p=game(e.latlng);setCoords({lat:p.lat.toFixed(2),lon:p.lon.toFixed(2)})});map.on("click",(e:any)=>choose(e.latlng));mapRef.current=map})()},[user]);
+ const visible=useMemo(()=>markers.filter(m=>enabled.has(m.type)&&(!query||`${m.name} ${m.note} ${TYPE_MAP[m.type]?.name||""}`.toLowerCase().includes(query.toLowerCase()))),[markers,enabled,query]);
+ useEffect(()=>{const L=leaflet.current,map=mapRef.current;if(!L||!map)return;layers.current.forEach(x=>map.removeLayer(x));layers.current=[];visible.forEach(item=>{const t=TYPE_MAP[item.type]||TYPE_MAP.base;const m=L.marker([100-Number(item.lat),Number(item.lon)],{icon:L.divIcon({className:"",html:`<div class="map-marker" style="color:${t.color};border-color:${t.color}88">${t.icon}</div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map);m.on("click",()=>{if(modeRef.current==="idle")setSelected(item)});layers.current.push(m)})},[visible]);
+ function begin(){setSelected(null);if(!user){setMode("auth");return}setDraft({type:"oilvein",name:"",note:"",lat:50,lon:50,publishImmediately:user.role==="admin"});setMode("select")}
+ function cancel(){clearTemp();setDraft(null);setErrors({});setMode("idle");setBusy(false)}
+ function requestCancel(){if(mode==="edit"&&(draft?.name.trim()||draft?.note.trim()))setMode("discard");else cancel()}
+ function toggle(id:string){setEnabled(p=>{const n=new Set(p);n.has(id)?n.delete(id):n.add(id);return n})}
+ async function submit(e:React.FormEvent){e.preventDefault();if(!draft)return;const er:any={};if(draft.name.trim().length<2)er.name="Název musí mít alespoň 2 znaky.";if(draft.note.length>1000)er.note="Maximum je 1000 znaků.";setErrors(er);if(Object.keys(er).length)return;setBusy(true);const r=await fetch("/api/markers",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({...draft,name:draft.name.trim(),note:draft.note.trim(),publishImmediately:user?.role==="admin"&&draft.publishImmediately})});const d=await r.json();if(!r.ok){setErrors({form:d.error||"Uložení selhalo."});setBusy(false);return}const now=d.approval_status==="approved";cancel();if(now)await load();setMessage(now?"✓ Marker byl publikován.":"✓ Marker byl odeslán ke schválení.");setTimeout(()=>setMessage(""),3500)}
+ useEffect(()=>{const fn=(e:KeyboardEvent)=>{if(e.key!=="Escape")return;if(mode==="auth")setMode("idle");else if(mode==="select")cancel();else if(mode==="edit")requestCancel();else if(mode==="discard")setMode("edit");else if(selected)setSelected(null)};window.addEventListener("keydown",fn);return()=>window.removeEventListener("keydown",fn)},[mode,draft,selected]);
+ return <div className={`map-shell ${mode==="select"?"selecting-location":""}`}>
+  <aside className="map-sidebar"><div className="side-title"><span>MAP FILTERS</span><button onClick={()=>setEnabled(new Set())}>CLEAR</button></div><button className="quick-filter" onClick={()=>setEnabled(new Set(["metal","richmetal","crystal","obsidian","oil","oilvein","silica","blackpearls"]))}>⚡ FARMING ESSENTIALS</button>{Object.entries(TYPES).map(([cat,arr]:any)=><section className="filter-section" key={cat}><h3>⌄ {cat.toUpperCase()}</h3>{arr.map((x:any)=><button key={x[0]} className={`filter-row ${enabled.has(x[0])?"active":""}`} onClick={()=>toggle(x[0])}><i style={{background:x[3],color:x[3]}}/><span>{x[1]}</span><b>{markers.filter(m=>m.type===x[0]).length}</b></button>)}</section>)}<div className="sidebar-help">Registrovaní uživatelé mohou navrhovat nové lokace. Veřejné jsou až po schválení adminem.</div></aside>
+  <div className="map-main"><div className="map-toolbar"><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Hledat resources, creatures, caves…"/><button className="add-marker-button" onClick={begin}>＋ PŘIDAT MARKER</button></div>{mode==="select"&&<div className="selection-banner"><span>📍 Klikni na mapu a vyber umístění markeru</span><button onClick={cancel}>ESC · ZRUŠIT</button></div>}<div ref={mapNode} className="leaflet-map"/><div className="coords-box"><span>LAT</span><b>{coords.lat}</b><span>LON</span><b>{coords.lon}</b></div>{message&&<div className="toast-msg">{message}</div>}</div>
+  {selected&&mode==="idle"&&<aside className="marker-detail"><button className="detail-x" onClick={()=>setSelected(null)}>×</button><div className="kicker">{TYPE_MAP[selected.type]?.name}</div><h2>{selected.name}</h2><div className="verified">✓ VERIFIED</div><div className="coord-grid"><div><span>LATITUDE</span><b>{Number(selected.lat).toFixed(2)}</b></div><div><span>LONGITUDE</span><b>{Number(selected.lon).toFixed(2)}</b></div></div><p>{selected.note||"Bez poznámky."}</p></aside>}
+  {mode==="auth"&&<div className="modal-bg" onMouseDown={e=>{if(e.target===e.currentTarget)setMode("idle")}}><div className="auth-required-card"><button className="detail-x" onClick={()=>setMode("idle")}>×</button><div className="kicker">COMMUNITY MAP</div><h2>Přidej lokaci do Tharat Map</h2><p>Pro přidávání markerů potřebuješ bezplatný účet.</p><div className="auth-required-actions"><button className="accent-button wide" onClick={()=>router.push("/login?callbackUrl=/")}>PŘIHLÁSIT SE</button><button className="ghost-button wide" onClick={()=>router.push("/register?callbackUrl=/")}>VYTVOŘIT ÚČET</button></div></div></div>}
+  {mode==="edit"&&draft&&<div className="modal-bg"><form className="marker-form marker-form-v51" onSubmit={submit}><button type="button" className="detail-x" onClick={requestCancel}>×</button><div className="kicker">COMMUNITY SUBMISSION</div><h2>Nový marker</h2><div className="picked-position"><div><span>LATITUDE</span><b>{draft.lat.toFixed(2)}</b></div><div><span>LONGITUDE</span><b>{draft.lon.toFixed(2)}</b></div><button type="button" onClick={()=>{clearTemp();setMode("select")}}>ZMĚNIT POZICI</button></div><label>TYP LOKACE *<select value={draft.type} onChange={e=>setDraft({...draft,type:e.target.value})}><optgroup label="RESOURCES">{TYPES.resources.map((x:any)=><option key={x[0]} value={x[0]}>{x[2]} {x[1]}</option>)}</optgroup><optgroup label="LOCATIONS">{TYPES.locations.map((x:any)=><option key={x[0]} value={x[0]}>{x[2]} {x[1]}</option>)}</optgroup></select></label><label>NÁZEV *<input autoFocus maxLength={100} className={errors.name?"invalid":""} value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})}/></label>{errors.name&&<div className="field-error">{errors.name}</div>}<label>POZNÁMKA<textarea maxLength={1000} value={draft.note} onChange={e=>setDraft({...draft,note:e.target.value})}/></label><div className="field-counter">{draft.note.length}/1000</div>{user?.role==="admin"?<div className="admin-publish-box"><b>ADMIN PUBLIKACE</b><label><input type="checkbox" checked={draft.publishImmediately} onChange={e=>setDraft({...draft,publishImmediately:e.target.checked})}/> Publikovat okamžitě</label></div>:<div className="moderation-note">ⓘ Marker před zveřejněním zkontroluje administrátor.</div>}{errors.form&&<div className="form-error">{errors.form}</div>}<div className="form-actions"><button type="button" className="ghost-button" onClick={requestCancel}>ZRUŠIT</button><button className="accent-button" disabled={busy||draft.name.trim().length<2}>{busy?"ODESÍLÁM…":user?.role==="admin"&&draft.publishImmediately?"PUBLIKOVAT MARKER":"ODESLAT MARKER"}</button></div></form></div>}
+  {mode==="discard"&&<div className="modal-bg"><div className="discard-card"><div className="kicker">NEULOŽENÉ ZMĚNY</div><h2>Zahodit rozepsaný marker?</h2><p>Rozepsané údaje budou ztraceny.</p><div className="form-actions"><button className="ghost-button" onClick={()=>setMode("edit")}>POKRAČOVAT V ÚPRAVĚ</button><button className="danger-button" onClick={cancel}>ZAHODIT</button></div></div></div>}
+ </div>
 }

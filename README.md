@@ -77,3 +77,14 @@ UPDATE users SET role='admin' WHERE lower(email)=lower('your@email.cz');
 ## Current map data
 The database starts empty on purpose. No unverified Tharat coordinates were invented.
 The supplied `public/tharat-map.jpg` is the temporary map background from the earlier prototype.
+
+## V5.1
+- Viditelné tlačítko `+ PŘIDAT MARKER`.
+- Host dostane login/register modal.
+- Přihlášený uživatel vybere pozici kliknutím do mapy.
+- LAT/LON se vezmou z mapy a ve formuláři se nepřepisují ručně.
+- `ZMĚNIT POZICI` zachová rozepsaná data.
+- ESC ruší výběr; u rozepsaného markeru vyžádá potvrzení.
+- Běžný user vždy vytváří `pending` marker.
+- Admin může zvolit `Publikovat okamžitě`; oprávnění kontroluje server.
+- Není potřeba žádná změna databázového schématu oproti V5.

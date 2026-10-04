@@ -14,6 +14,7 @@ const markerSchema = z.object({
   lat: z.number().min(0).max(100),
   lon: z.number().min(0).max(100),
   note: z.string().trim().max(1000).default(""),
+  publishImmediately: z.boolean().optional().default(false),
 });
 
 export async function GET() {
@@ -37,11 +38,18 @@ export async function POST(req: Request) {
   try {
     const body = markerSchema.parse(await req.json());
     const db = sql();
-    const rows = await db`
-      INSERT INTO markers (type, name, lat, lon, note, status, approval_status, submitted_by)
-      VALUES (${body.type}, ${body.name}, ${body.lat}, ${body.lon}, ${body.note}, 'unverified', 'pending', ${session.user.id})
-      RETURNING id, type, name, lat::float8 AS lat, lon::float8 AS lon, note, status, approval_status, submitted_by, created_at
-    `;
+    const publishNow = session.user.role === "admin" && body.publishImmediately === true;
+    const rows = publishNow
+      ? await db`
+          INSERT INTO markers (type, name, lat, lon, note, status, approval_status, submitted_by, reviewed_by, reviewed_at)
+          VALUES (${body.type}, ${body.name}, ${body.lat}, ${body.lon}, ${body.note}, 'verified', 'approved', ${session.user.id}, ${session.user.id}, now())
+          RETURNING id, type, name, lat::float8 AS lat, lon::float8 AS lon, note, status, approval_status, submitted_by, created_at
+        `
+      : await db`
+          INSERT INTO markers (type, name, lat, lon, note, status, approval_status, submitted_by)
+          VALUES (${body.type}, ${body.name}, ${body.lat}, ${body.lon}, ${body.note}, 'unverified', 'pending', ${session.user.id})
+          RETURNING id, type, name, lat::float8 AS lat, lon::float8 AS lon, note, status, approval_status, submitted_by, created_at
+        `;
     return NextResponse.json(rows[0], { status: 201 });
   } catch (error: any) {
     if (error?.name === "ZodError") {
