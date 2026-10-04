@@ -78,6 +78,13 @@ body{background:#030813;background-image:radial-gradient(circle at 72% 0%,rgba(2
 @media(max-width:1180px){:root{--rightbar:0px}.map-shell{grid-template-columns:var(--sidebar) 1fr}.map-rightbar{display:none}.marker-detail{right:16px}.toast-success{right:18px}}
 @media(max-width:900px){:root{--sidebar:0px}.topbar{grid-template-columns:1fr auto}.map-shell{grid-template-columns:1fr}.map-toolbar-overlay{left:10px}.map-zoom-controls{left:10px}.marker-detail{right:12px}.marker-form-v51{width:min(620px,calc(100vw - 24px))}}
 
-/* V5.4.2 - dinosaur artwork inside THARAT diamond */
-.brand-mark{display:flex;align-items:center;justify-content:center;overflow:hidden;flex:0 0 auto;}
-.brand-mark img{width:125%;height:125%;object-fit:contain;transform:rotate(-45deg);display:block;}
+/* V5.4.3 illustrated resource icons */
+.filter-row{height:46px;gap:10px;padding-left:7px}
+.filter-row .resource-icon{--icon-color:#37dfff;flex:0 0 34px;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:radial-gradient(circle at 50% 25%,color-mix(in srgb,var(--icon-color) 22%,#152334),#09131f 72%);border:1px solid color-mix(in srgb,var(--icon-color) 48%,#23384c);box-shadow:inset 0 1px rgba(255,255,255,.08),0 0 11px color-mix(in srgb,var(--icon-color) 20%,transparent);overflow:hidden;transition:.18s ease}
+.filter-row .resource-icon svg{width:29px;height:29px;display:block;filter:drop-shadow(0 3px 3px rgba(0,0,0,.42))}
+.filter-row:hover .resource-icon,.filter-row.active .resource-icon{transform:scale(1.05);border-color:var(--icon-color);box-shadow:inset 0 1px rgba(255,255,255,.1),0 0 16px color-mix(in srgb,var(--icon-color) 40%,transparent)}
+.filter-row.active .resource-icon{background:radial-gradient(circle at 50% 25%,color-mix(in srgb,var(--icon-color) 30%,#16283b),#081522 75%)}
+.map-marker{--marker-color:#28dfff;width:42px;height:42px;border-radius:50% 50% 50% 8px!important;transform:rotate(-45deg);background:radial-gradient(circle at 48% 35%,color-mix(in srgb,var(--marker-color) 18%,#14283b),#07121e 72%)!important;border:2px solid var(--marker-color)!important;box-shadow:0 0 0 2px rgba(4,10,17,.8),0 0 18px color-mix(in srgb,var(--marker-color) 55%,transparent),0 9px 20px rgba(0,0,0,.55)!important;transition:.18s ease}
+.map-marker:hover{transform:rotate(-45deg) scale(1.13)!important;z-index:10}
+.map-marker-icon{width:31px;height:31px;display:grid;place-items:center;transform:rotate(45deg)}
+.map-marker-icon svg{width:28px;height:28px;display:block;filter:drop-shadow(0 3px 3px rgba(0,0,0,.48))}
