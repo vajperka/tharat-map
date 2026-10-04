@@ -9,6 +9,8 @@ export type Marker = {
   lon: number;
   note: string;
   image_url: string | null;
+  creature_slug?: string | null;
+  creature_name?: string | null;
   status: "verified" | "community" | "unverified";
   approval_status: ApprovalStatus;
   submitted_by: string | null;

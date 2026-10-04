@@ -124,3 +124,9 @@ Adds user listing and account blocking, full marker management/editing including
 
 ## V5.5.1
 - Fixed TypeScript session nullability in admin marker audit logging.
+
+
+## V5.6 Creature Spawn filters
+Before deploying V5.6, run `scripts/creatures-migration.sql` in Neon. If the Neon editor rejects multiple commands, run each statement separately.
+
+Adds a searchable expandable Creature Spawn filter, per-creature marker counts, persistent creature selections, required creature selection when creating Creature Spawn markers, and an Admin → TVOROVÉ tab for adding or hiding creatures without redeploying.
