@@ -115,3 +115,8 @@ The supplied `public/tharat-map.png` is the temporary map background from the ea
 - Upload uz nevyzaduje BLOB_READ_WRITE_TOKEN v aplikacnim kodu.
 - Server overuje prihlaseni, MIME typ a velikost souboru.
 - Limit fotografie je 4 MB kvuli limitu request body Vercel Functions.
+
+## V5.5 Admin Panel V2
+Before deploying V5.5, run `scripts/admin-v2-migration.sql` in Neon. If Neon Query rejects multiple commands, run each statement separately.
+
+Adds user listing and account blocking, full marker management/editing including photos, delete confirmations, overview metrics, and an admin audit log. Banned users are rejected during credential login.

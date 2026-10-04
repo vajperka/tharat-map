@@ -25,13 +25,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const db = sql();
         const rows = await db`
-          SELECT id, name, email, password_hash, role
+          SELECT id, name, email, password_hash, role, banned
           FROM users
           WHERE lower(email) = lower(${parsed.data.email})
           LIMIT 1
         `;
         const user = rows[0] as any;
-        if (!user) return null;
+        if (!user || user.banned) return null;
 
         const ok = await bcrypt.compare(parsed.data.password, user.password_hash);
         if (!ok) return null;

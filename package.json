@@ -1,6 +1,6 @@
 {
-  "name": "tharat-resource-map-v5-4",
-  "version": "5.4.0",
+  "name": "tharat-resource-map-v5-5",
+  "version": "5.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev",

@@ -1,36 +1,11 @@
-import { NextResponse } from "next/server";
-import { auth } from "@/auth";
-import { sql } from "@/lib/db";
-import { z } from "zod";
-
-const schema = z.object({
-  action: z.enum(["approve", "reject", "delete"]),
-});
-
-export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  const { id } = await ctx.params;
-  const markerId = Number(id);
-  if (!Number.isInteger(markerId)) return NextResponse.json({ error: "Bad id" }, { status: 400 });
-
-  const { action } = schema.parse(await req.json());
-  const db = sql();
-
-  if (action === "delete") {
-    await db`DELETE FROM markers WHERE id=${markerId}`;
-    return NextResponse.json({ ok: true });
-  }
-
-  const approval = action === "approve" ? "approved" : "rejected";
-  const status = action === "approve" ? "verified" : "unverified";
-  await db`
-    UPDATE markers
-    SET approval_status=${approval}, status=${status}, reviewed_by=${session.user.id}, reviewed_at=now()
-    WHERE id=${markerId}
-  `;
-  return NextResponse.json({ ok: true });
+import { NextResponse } from 'next/server';import { auth } from '@/auth';import { sql } from '@/lib/db';import { z } from 'zod';import { del } from '@vercel/blob';
+const schema=z.discriminatedUnion('action',[
+ z.object({action:z.literal('approve')}),z.object({action:z.literal('reject')}),z.object({action:z.literal('delete'),deleteImage:z.boolean().optional()}),
+ z.object({action:z.literal('update'),name:z.string().trim().min(2).max(100),type:z.string().min(1).max(30),lat:z.number().min(0).max(100),lon:z.number().min(0).max(100),note:z.string().max(1000),image_url:z.string().url().nullable(),approval_status:z.enum(['pending','approved','rejected'])})
+]);
+export async function PATCH(req:Request,ctx:{params:Promise<{id:string}>}){const session=await auth();if(!session?.user||session.user.role!=='admin')return NextResponse.json({error:'Forbidden'},{status:403});const {id}=await ctx.params;const markerId=Number(id);if(!Number.isInteger(markerId))return NextResponse.json({error:'Bad id'},{status:400});const body=schema.parse(await req.json());const db=sql();const old=(await db`SELECT image_url FROM markers WHERE id=${markerId}`)[0] as any;if(!old)return NextResponse.json({error:'Not found'},{status:404});
+ if(body.action==='delete'){await db`DELETE FROM markers WHERE id=${markerId}`;if(body.deleteImage&&old.image_url)try{await del(old.image_url)}catch(e){console.error(e)};await log('marker_deleted',{id:markerId});return NextResponse.json({ok:true})}
+ if(body.action==='update'){const status=body.approval_status==='approved'?'verified':'unverified';await db`UPDATE markers SET name=${body.name},type=${body.type},lat=${body.lat},lon=${body.lon},note=${body.note},image_url=${body.image_url},approval_status=${body.approval_status},status=${status},reviewed_by=${session.user.id},reviewed_at=now(),updated_at=now() WHERE id=${markerId}`;if(old.image_url&&old.image_url!==body.image_url)try{await del(old.image_url)}catch(e){console.error(e)};await log('marker_updated',{id:markerId});return NextResponse.json({ok:true})}
+ const approval=body.action==='approve'?'approved':'rejected',status=body.action==='approve'?'verified':'unverified';await db`UPDATE markers SET approval_status=${approval},status=${status},reviewed_by=${session.user.id},reviewed_at=now(),updated_at=now() WHERE id=${markerId}`;await log(body.action==='approve'?'marker_approved':'marker_rejected',{id:markerId});return NextResponse.json({ok:true});
+ async function log(action:string,details:any){await db`INSERT INTO admin_actions(admin_id,action,target_type,target_id,details) VALUES(${session.user.id},${action},'marker',${String(markerId)},${JSON.stringify(details)}::jsonb)`}
 }

@@ -1,4 +1,4 @@
-export type Role = "user" | "admin";
+export type Role = "user" | "moderator" | "admin";
 export type ApprovalStatus = "pending" | "approved" | "rejected";
 
 export type Marker = {
