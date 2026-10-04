@@ -29,6 +29,12 @@ const TYPE_MAP:any={};Object.values(TYPES).flat().forEach((x:any)=>TYPE_MAP[x[0]
 type Mode="idle"|"auth"|"select"|"edit"|"discard";
 type Draft={type:string;name:string;lat:number;lon:number;note:string;publishImmediately:boolean};
 const IMAGE_TYPES=["image/jpeg","image/png","image/webp"]; const MAX_IMAGE_BYTES=4*1024*1024;
+// The source map is 1727×911. Keep that visual aspect ratio while mapping game LAT/LON 0–100 to percentages.
+const MAP_ASPECT=1727/911;
+const MAP_WIDTH=100*MAP_ASPECT;
+const MAP_BOUNDS:[[number,number],[number,number]]=[[0,0],[100,MAP_WIDTH]];
+const lonToX=(lon:number)=>lon*MAP_ASPECT;
+const xToLon=(x:number)=>x/MAP_ASPECT;
 
 export default function MapClient({user}:{user:any}){
  const {t}=useLanguage();
@@ -39,14 +45,15 @@ export default function MapClient({user}:{user:any}){
  function showSuccess(text:string){setToastLeaving(false);setMessage(text);window.setTimeout(()=>setToastLeaving(true),3500);window.setTimeout(()=>{setMessage("");setToastLeaving(false)},4000)}
  useEffect(()=>{modeRef.current=mode},[mode]); useEffect(()=>{draftRef.current=draft},[draft]);
  async function load(){const r=await fetch("/api/markers",{cache:"no-store"});if(r.ok)setMarkers(await r.json())} useEffect(()=>{load()},[]);
- const game=(ll:any)=>({lat:Math.max(0,Math.min(100,100-ll.lat)),lon:Math.max(0,Math.min(100,ll.lng))});
+ const game=(ll:any)=>({lat:Math.max(0,Math.min(100,100-ll.lat)),lon:Math.max(0,Math.min(100,xToLon(ll.lng)))});
+ function coverMap(){const map=mapRef.current;if(!map)return;map.invalidateSize(false);const z=map.getBoundsZoom(MAP_BOUNDS,true);map.setView([50,MAP_WIDTH/2],z,{animate:false})}
  function clearTemp(){if(temp.current&&mapRef.current){mapRef.current.removeLayer(temp.current);temp.current=null}}
- function showTemp(lat:number,lon:number){const L=leaflet.current;if(!L)return;clearTemp();temp.current=L.marker([100-lat,lon],{interactive:false,icon:L.divIcon({className:"",html:'<div class="temp-map-marker">＋</div>',iconSize:[44,44],iconAnchor:[22,22]})}).addTo(mapRef.current)}
+ function showTemp(lat:number,lon:number){const L=leaflet.current;if(!L)return;clearTemp();temp.current=L.marker([100-lat,lonToX(lon)],{interactive:false,icon:L.divIcon({className:"",html:'<div class="temp-map-marker">＋</div>',iconSize:[44,44],iconAnchor:[22,22]})}).addTo(mapRef.current)}
  function choose(ll:any){if(modeRef.current!=="select")return;const p=game(ll),old=draftRef.current;const d={type:old?.type||"oilvein",name:old?.name||"",note:old?.note||"",lat:+p.lat.toFixed(2),lon:+p.lon.toFixed(2),publishImmediately:old?.publishImmediately??user?.role==="admin"};setDraft(d);showTemp(d.lat,d.lon);setMode("edit");setErrors({})}
- useEffect(()=>{(async()=>{if(!mapNode.current||mapRef.current)return;const L=await import("leaflet");leaflet.current=L;const map=L.map(mapNode.current,{crs:L.CRS.Simple,minZoom:-2,maxZoom:4,zoomControl:false,attributionControl:false});L.imageOverlay("/tharat-map.png",[[0,0],[100,100]]).addTo(map);map.fitBounds([[0,0],[100,100]]);map.setMaxBounds([[-12,-12],[112,112]]);map.on("mousemove",(e:any)=>{const p=game(e.latlng);setCoords({lat:p.lat.toFixed(2),lon:p.lon.toFixed(2)})});map.on("click",(e:any)=>choose(e.latlng));mapRef.current=map;requestAnimationFrame(()=>map.invalidateSize())})()},[user]);
- useEffect(()=>{const onResize=()=>mapRef.current?.invalidateSize();window.addEventListener("resize",onResize);return()=>window.removeEventListener("resize",onResize)},[]);
+ useEffect(()=>{(async()=>{if(!mapNode.current||mapRef.current)return;const L=await import("leaflet");leaflet.current=L;const map=L.map(mapNode.current,{crs:L.CRS.Simple,minZoom:-3,maxZoom:4,zoomControl:false,attributionControl:false,zoomSnap:0.1});L.imageOverlay("/tharat-map.png",MAP_BOUNDS).addTo(map);map.setMaxBounds([[-12,-12],[112,MAP_WIDTH+12]]);map.on("mousemove",(e:any)=>{const p=game(e.latlng);setCoords({lat:p.lat.toFixed(2),lon:p.lon.toFixed(2)})});map.on("click",(e:any)=>choose(e.latlng));mapRef.current=map;requestAnimationFrame(()=>coverMap())})()},[user]);
+ useEffect(()=>{let timer:any;const onResize=()=>{clearTimeout(timer);timer=setTimeout(()=>coverMap(),80)};window.addEventListener("resize",onResize);return()=>{clearTimeout(timer);window.removeEventListener("resize",onResize)}},[]);
  const visible=useMemo(()=>markers.filter(m=>enabled.has(m.type)&&(!query||`${m.name} ${m.note} ${t(`types.${m.type}`)}`.toLowerCase().includes(query.toLowerCase()))),[markers,enabled,query,t]);
- useEffect(()=>{const L=leaflet.current,map=mapRef.current;if(!L||!map)return;layers.current.forEach(x=>map.removeLayer(x));layers.current=[];visible.forEach(item=>{const t=TYPE_MAP[item.type]||TYPE_MAP.base;const m=L.marker([100-Number(item.lat),Number(item.lon)],{icon:L.divIcon({className:"",html:`<div class="map-marker" style="--marker-color:${t.color};color:${t.color};border-color:${t.color}aa"><span class="map-marker-icon">${ICONS[item.type]||""}</span></div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map);m.on("click",()=>{if(modeRef.current==="idle")setSelected(item)});layers.current.push(m)})},[visible]);
+ useEffect(()=>{const L=leaflet.current,map=mapRef.current;if(!L||!map)return;layers.current.forEach(x=>map.removeLayer(x));layers.current=[];visible.forEach(item=>{const t=TYPE_MAP[item.type]||TYPE_MAP.base;const m=L.marker([100-Number(item.lat),lonToX(Number(item.lon))],{icon:L.divIcon({className:"",html:`<div class="map-marker" style="--marker-color:${t.color};color:${t.color};border-color:${t.color}aa"><span class="map-marker-icon">${ICONS[item.type]||""}</span></div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map);m.on("click",()=>{if(modeRef.current==="idle")setSelected(item)});layers.current.push(m)})},[visible]);
  function begin(){setSelected(null);if(!user){setMode("auth");return}setDraft({type:"oilvein",name:"",note:"",lat:50,lon:50,publishImmediately:user.role==="admin"});setMode("select")}
  function clearImage(){setImageFile(null);if(imagePreview)URL.revokeObjectURL(imagePreview);setImagePreview("");setUploadProgress(0)}
  function cancel(){clearTemp();clearImage();setDraft(null);setErrors({});setMode("idle");setBusy(false)}
@@ -60,7 +67,7 @@ export default function MapClient({user}:{user:any}){
   <div className="map-main">
    <div className="map-toolbar map-toolbar-overlay"><div className="map-search-field"><span>⌕</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t("map.search")}/>{query&&<button className="search-clear" onClick={()=>setQuery("")}>×</button>}</div><button className="add-marker-button" onClick={begin}>{t("map.add")}</button></div>
    {mode==="select"&&<div className="selection-banner"><span>{t("map.pick")}</span><button onClick={cancel}>ESC · {t("common.cancel")}</button></div>}
-   <div className="map-zoom-controls"><button onClick={()=>mapRef.current?.zoomIn()}>＋</button><button onClick={()=>mapRef.current?.zoomOut()}>−</button><button title={t("map.fitMap")} onClick={()=>mapRef.current?.fitBounds([[0,0],[100,100]])}>⌗</button></div>
+   <div className="map-zoom-controls"><button onClick={()=>mapRef.current?.zoomIn()}>＋</button><button onClick={()=>mapRef.current?.zoomOut()}>−</button><button title={t("map.fitMap")} onClick={coverMap}>⌗</button></div>
    <div ref={mapNode} className="leaflet-map"/><div className="coords-box"><span>LAT</span><b>{coords.lat}</b><span>LON</span><b>{coords.lon}</b></div>{message&&<div className={`toast-msg toast-success ${toastLeaving?"toast-leaving":""}`}><div className="toast-icon">✓</div><div className="toast-copy"><b>{user?.role==="admin"&&draft?.publishImmediately?t("map.published"):t("map.done")}</b><span>{message}</span></div><button onClick={()=>setMessage("")}>×</button></div>}
   </div>
   {selected&&mode==="idle"&&<aside className="marker-detail"><button className="detail-x" onClick={()=>setSelected(null)}>×</button><div className="kicker">{t(`types.${selected.type}`)}</div><h2>{selected.name}</h2><div className="verified">{t("map.verified")}</div><div className="coord-grid"><div><span>LATITUDE</span><b>{Number(selected.lat).toFixed(2)}</b></div><div><span>LONGITUDE</span><b>{Number(selected.lon).toFixed(2)}</b></div></div>{selected.image_url&&<button className="marker-photo-button" onClick={()=>window.open(selected.image_url!,"_blank","noopener,noreferrer")}><img src={selected.image_url} alt={`${t("map.photoAlt")} ${selected.name}`}/><span>{t("map.openPhoto")}</span></button>}<p>{selected.note||t("common.noNote")}</p></aside>}
