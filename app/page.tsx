@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import AuthNav from "@/components/AuthNav";
 import MapClient from "@/components/MapClient";
+import TopCopy from "@/components/TopCopy";
 
 export default async function Home() {
   const session = await auth();
@@ -8,7 +9,7 @@ export default async function Home() {
     <main className="site">
       <header className="topbar">
         <a className="brand" href="/"><span className="brand-mark"></span><span><b>THARAT</b><small>ANCIENT SANDS</small></span></a>
-        <div className="top-copy">INTERACTIVE RESOURCE MAP</div>
+        <TopCopy />
         <AuthNav user={session?.user || null} />
       </header>
       <MapClient user={session?.user || null} />
