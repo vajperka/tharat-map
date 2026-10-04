@@ -2,7 +2,7 @@
   "framework": "nextjs",
   "headers": [
     {
-      "source": "/tharat-map.jpg",
+      "source": "/tharat-map.png",
       "headers": [{"key":"Cache-Control","value":"public, max-age=31536000, immutable"}]
     }
   ]
