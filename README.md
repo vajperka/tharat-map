@@ -120,3 +120,7 @@ The supplied `public/tharat-map.png` is the temporary map background from the ea
 Before deploying V5.5, run `scripts/admin-v2-migration.sql` in Neon. If Neon Query rejects multiple commands, run each statement separately.
 
 Adds user listing and account blocking, full marker management/editing including photos, delete confirmations, overview metrics, and an admin audit log. Banned users are rejected during credential login.
+
+
+## V5.5.1
+- Fixed TypeScript session nullability in admin marker audit logging.
