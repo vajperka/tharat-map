@@ -8,7 +8,7 @@ export default async function Home() {
   return (
     <main className="site">
       <header className="topbar">
-        <a className="brand" href="/"><span className="brand-mark"></span><span><b>THARAT</b><small>ARKSURVIVAL.CZ</small></span></a>
+        <a className="brand" href="/"><span className="brand-mark"><img src="/ark-dino-logo.png" alt="ARK dinosaur logo" /></span><span><b>THARAT</b><small>ARKSURVIVAL.CZ</small></span></a>
         <TopCopy />
         <AuthNav user={session?.user || null} />
       </header>
