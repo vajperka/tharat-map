@@ -104,3 +104,10 @@ The supplied `public/tharat-map.png` is the temporary map background from the ea
 - Admin vidí fotografii před schválením.
 - Po schválení se fotografie zobrazuje v detailu markeru.
 - Vyžaduje sloupec `markers.image_url TEXT` (už přidán v DB) a Blob store připojený k Vercel projektu.
+
+
+## V5.2.1
+- Opraven upload fotografii pro nove Vercel Blob projekty s OIDC.
+- Upload uz nevyzaduje BLOB_READ_WRITE_TOKEN v aplikacnim kodu.
+- Server overuje prihlaseni, MIME typ a velikost souboru.
+- Limit fotografie je 4 MB kvuli limitu request body Vercel Functions.
