@@ -7,7 +7,7 @@ export type Language = "cs" | "en";
 const translations = {
   cs: {
     common:{login:"Přihlásit",register:"Registrace",logout:"Odhlásit",admin:"ADMINISTRACE",cancel:"ZRUŠIT",delete:"SMAZAT",backMap:"← Zpět na mapu",noNote:"Bez poznámky."},
-    header:{map:"INTERACTIVE RESOURCE MAP",language:"Jazyk"},
+    header:{map:"INTERAKTIVNÍ MAPA SUROVIN",language:"Jazyk"},
     map:{filters:"FILTRY MAPY",clear:"VYMAZAT",farming:"⚡ DŮLEŽITÉ PRO FARMENÍ",resources:"ZDROJE",locations:"LOKACE",help:"Registrovaní uživatelé mohou navrhovat nové lokace. Veřejné jsou až po schválení adminem.",reset:"RESET FILTRŮ",quick:"RYCHLÉ AKCE",legend:"LEGENDA",approvedMarker:"Schválený marker",pendingMarker:"Čeká na schválení",yourMarker:"Tvůj marker",fitMap:"Zobrazit celou mapu",search:"Hledat zdroje, tvory, jeskyně…",add:"＋ PŘIDAT MARKER",pick:"📍 Klikni na mapu a vyber umístění markeru",done:"HOTOVO",published:"MARKER PUBLIKOVÁN",verified:"✓ OVĚŘENO",openPhoto:"↗ OTEVŘÍT FOTKU",photoAlt:"Fotka lokace",proposedBy:"NAVRHL LOKACI",unknownProposer:"Neznámý uživatel"},
     types:{metal:"Kov",richmetal:"Bohatý kov",crystal:"Krystal",obsidian:"Obsidián",oil:"Olej",oilvein:"Ropná žíla",sulfur:"Síra",silica:"Křemičité perly",blackpearls:"Černé perly",element:"Elementový prach",redingot:"Červený ingot",diamondingot:"Diamond ingot",goldingot:"Zlatý ingot",cave:"Jeskyně",artifact:"Artefakty",boss:"Bossové",loot:"Jeskynní loot",base:"Místa pro základnu",creature:"Výskyt tvorů"},
     creatures:{search:"Hledat tvora…",all:"VŠICHNI",selected:"vybraní",creature:"TVOR",choose:"Vyber tvora…",required:"Vyber tvora."},
