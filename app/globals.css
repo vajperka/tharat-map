@@ -278,3 +278,14 @@ html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height
   .mobile-filter-toggle{left:10px!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important}
   .coords-box{right:10px!important;bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
 }
+
+/* V5.13.3 — mobile language dropdown layering fix */
+@media (max-width: 900px){
+  .topbar{z-index:3000!important;isolation:isolate}
+  .auth-nav{overflow-x:auto!important;overflow-y:visible!important;position:relative;z-index:3010}
+  .auth-nav .language-switcher{position:relative!important;z-index:3060!important;overflow:visible!important}
+  .auth-nav .language-menu{position:fixed!important;z-index:9999!important;top:calc(58px + 8px)!important;left:10px!important;right:auto!important;width:min(230px,calc(100vw - 20px))!important;max-height:calc(100dvh - 82px)!important;overflow-y:auto!important;transform:none!important;box-shadow:0 22px 60px rgba(0,0,0,.78),0 0 0 1px rgba(39,225,193,.08)!important}
+}
+@media (max-width:560px){
+  .auth-nav .language-menu{top:calc(54px + 7px)!important;left:9px!important;width:min(230px,calc(100vw - 18px))!important}
+}
