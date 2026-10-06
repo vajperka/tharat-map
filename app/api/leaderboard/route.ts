@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {sql} from '@/lib/db';
+export async function GET(){const db=sql();const rows=await db`SELECT u.id,u.name,u.avatar_url,COUNT(m.id) FILTER(WHERE m.approval_status='approved')::int approved_count FROM users u LEFT JOIN markers m ON m.submitted_by=u.id WHERE COALESCE(u.banned,false)=false GROUP BY u.id,u.name,u.avatar_url ORDER BY approved_count DESC,u.name ASC LIMIT 100`;return NextResponse.json(rows)}

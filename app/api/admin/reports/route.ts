@@ -1,0 +1,3 @@
+import{NextResponse}from'next/server';import{sql}from'@/lib/db';import{requireAdmin}from'@/lib/admin';
+export async function GET(){const a=await requireAdmin();if('error'in a)return a.error;const db=sql();const rows=await db`SELECT r.id,r.reason,r.detail,r.created_at,m.id marker_id,m.name marker_name,u.name reporter_name FROM marker_reports r JOIN markers m ON m.id=r.marker_id LEFT JOIN users u ON u.id=r.user_id ORDER BY r.created_at DESC LIMIT 100`;return NextResponse.json(rows)}
+export async function DELETE(req:Request){const a=await requireAdmin();if('error'in a)return a.error;const{id}=await req.json();const db=sql();await db`DELETE FROM marker_reports WHERE id=${id}`;return NextResponse.json({ok:true})}
