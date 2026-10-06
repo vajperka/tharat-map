@@ -395,3 +395,52 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .delete-confirm>div .ghost-button{min-width:110px}
 .delete-confirm>div .danger-button{min-width:178px}
 @media(max-width:520px){.delete-confirm>div{flex-direction:column-reverse;align-items:stretch}.delete-confirm>div .ghost-button,.delete-confirm>div .danger-button{width:100%;min-width:0}}
+
+/* V5.16.2 — admin user detail action alignment */
+.admin-editor .admin-role-box{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  align-items:stretch;
+  padding:16px;
+}
+.admin-editor .admin-role-box>span,
+.admin-editor .admin-role-box>b{
+  grid-column:1/-1;
+}
+.admin-editor .admin-role-box>b{margin-bottom:4px}
+.admin-editor .admin-role-box>button{
+  width:100%;
+  min-width:0;
+  min-height:46px;
+  margin:0;
+  justify-self:stretch;
+  align-self:stretch;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  white-space:normal;
+  line-height:1.2;
+  padding:10px 12px;
+}
+.admin-editor>.form-actions{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  margin-top:12px;
+}
+.admin-editor>.form-actions>button{
+  min-width:220px;
+  min-height:46px;
+  margin:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+@media(max-width:620px){
+  .admin-editor .admin-role-box{grid-template-columns:1fr}
+  .admin-editor .admin-role-box>span,.admin-editor .admin-role-box>b{grid-column:1}
+  .admin-editor>.form-actions{align-items:stretch}
+  .admin-editor>.form-actions>button{width:100%;min-width:0}
+}
