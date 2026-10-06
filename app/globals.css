@@ -289,3 +289,20 @@ html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height
 @media (max-width:560px){
   .auth-nav .language-menu{top:calc(54px + 7px)!important;left:9px!important;width:min(230px,calc(100vw - 18px))!important}
 }
+
+/* V5.13.4 — language menu portal: escapes mobile header overflow/clipping */
+.language-menu-portal{
+  position:fixed!important;
+  right:auto!important;
+  bottom:auto!important;
+  z-index:2147483000!important;
+  max-height:calc(100dvh - 16px)!important;
+  overflow-y:auto!important;
+  transform:none!important;
+  background:rgba(6,15,27,.99)!important;
+  border:1px solid rgba(54,101,137,.58)!important;
+  box-shadow:0 22px 60px rgba(0,0,0,.78),0 0 0 1px rgba(39,225,193,.08)!important;
+}
+@media(max-width:900px){
+  .language-menu-portal{max-height:min(260px,calc(100dvh - 24px))!important}
+}
