@@ -19,4 +19,5 @@ export type Marker = {
   submitter_avatar_url?: string | null;
   submitter_approved_count?: number;
   created_at: string;
+  featured?: boolean;
 };

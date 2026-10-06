@@ -11,7 +11,7 @@ export async function GET() {
   const db = sql();
   const rows = await db`
     SELECT m.id, m.type, m.name, m.lat::float8 AS lat, m.lon::float8 AS lon,
-           m.note, m.image_url, m.creature_slug, c.name AS creature_name, m.status, m.approval_status, m.submitted_by, m.created_at,
+           m.note, m.image_url, m.creature_slug, c.name AS creature_name, m.status, m.approval_status, m.featured, m.submitted_by, m.created_at,
            u.name AS submitter_name, u.email AS submitter_email
     FROM markers m
     LEFT JOIN creatures c ON c.slug=m.creature_slug
