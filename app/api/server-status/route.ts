@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const SOURCE = "https://arksurvival.cz/";
-// Fallback for the same ARKSURVIVAL.CZ/SK server running the THARAT map.
-// Used only when the ARKSurvival.cz HTML returned to server-side fetch does not
-// contain its JS-rendered server cards.
-const THARAT_STATUS = "https://arkstatus.com/server-details/arksurvival-cz-sk-genesis-mise-neherni-server/11305931934";
+const THARAT_STATUS_PAGES = [
+  "https://arkstatus.com/server-details/arksurvival-cz-sk-genesis-mise-neherni-server/11305931934",
+  "https://arkstatus.com/server-details/arksurvival-cz-sk-genesis-mise-neherni-server/10363848137?lang=en",
+];
 
 function decodeText(html: string) {
   return html
@@ -23,21 +25,24 @@ function decodeText(html: string) {
 
 function tharatPlayersFromArkSurvival(html: string): number | null {
   const text = decodeText(html);
-  // Anchor specifically to the THARAT card, then read its own player count.
-  const heading = /ARKSURVIVAL\.CZ\s*[•·\-–—]\s*THARAT\b/i.exec(text);
-  if (!heading) return null;
-  const card = text.slice(heading.index, heading.index + 1400);
+  // Match the THARAT card regardless of whether the separator is a bullet,
+  // dash or just whitespace. Stop at the next ARKSURVIVAL.CZ card.
+  const start = text.search(/ARKSURVIVAL\.CZ\s*(?:[•·|\-–—]\s*)?THARAT\b/i);
+  if (start < 0) return null;
+  const rest = text.slice(start);
+  const next = rest.slice(20).search(/ARKSURVIVAL\.CZ\s*(?:[•·|\-–—]\s*)?[A-Z0-9]/i);
+  const card = next >= 0 ? rest.slice(0, next + 20) : rest.slice(0, 2500);
   const m = card.match(/Hráči\s*online\s*:?\s*(\d+)/i) || card.match(/Players\s*online\s*:?\s*(\d+)/i);
   return m ? Number(m[1]) : null;
 }
 
 function tharatPlayersFromStatus(html: string): number | null {
   const text = decodeText(html);
-  // Reject a stale/wrong page if it is no longer the THARAT map.
   if (!/\bTHARAT\b/i.test(text)) return null;
   const patterns = [
     /Survivors\s*online\s*(\d+)\s*\/\s*\d+/i,
     /Players\s*(\d+)\s*\/\s*\d+/i,
+    /Players[^0-9]{0,20}(\d+)\s*\/\s*\d+/i,
     /Online[^0-9]{0,40}(\d+)\s*\/\s*\d+/i,
   ];
   for (const re of patterns) {
@@ -48,37 +53,54 @@ function tharatPlayersFromStatus(html: string): number | null {
 }
 
 async function getText(url: string) {
-  const r = await fetch(url, {
-    headers: {
-      "user-agent": "Mozilla/5.0 (compatible; TharatResourceMap/1.0; +https://arksurvival.cz/)",
-      accept: "text/html,application/xhtml+xml",
-    },
-    next: { revalidate: 60 },
-  });
-  if (!r.ok) throw new Error(`${url}: ${r.status}`);
-  return r.text();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+  try {
+    const r = await fetch(url, {
+      headers: {
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154 Safari/537.36",
+        accept: "text/html,application/xhtml+xml",
+        "accept-language": "cs-CZ,cs;q=0.9,en;q=0.8",
+      },
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    if (!r.ok) throw new Error(`${url}: ${r.status}`);
+    return await r.text();
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export async function GET() {
   let players: number | null = null;
-  let source = "arksurvival.cz";
+  let source = "unavailable";
 
+  // Primary source: the exact THARAT card shown on ARKSurvival.cz.
   try {
     players = tharatPlayersFromArkSurvival(await getText(SOURCE));
+    if (players !== null) source = "arksurvival.cz";
   } catch {}
 
-  // Their homepage server list is populated by JavaScript, so a server-side
-  // fetch can receive only "Načítání serverů...". In that case use the live
-  // public status page for the same THARAT server rather than hiding the badge.
+  // The ARKSurvival list is rendered client-side. If its HTML does not contain
+  // the card, read both public THARAT instances tracked by ARK Status and sum
+  // them. This also survives one tracker page being temporarily unavailable.
   if (players === null) {
-    try {
-      players = tharatPlayersFromStatus(await getText(THARAT_STATUS));
-      if (players !== null) source = "live-status";
-    } catch {}
+    const values = await Promise.all(
+      THARAT_STATUS_PAGES.map(async url => {
+        try { return tharatPlayersFromStatus(await getText(url)); }
+        catch { return null; }
+      })
+    );
+    const valid = values.filter((v): v is number => typeof v === "number" && Number.isFinite(v));
+    if (valid.length) {
+      players = valid.reduce((sum, value) => sum + value, 0);
+      source = "arkstatus-tharat";
+    }
   }
 
   return NextResponse.json(
     { server: "Tharat", game: "Ascended", players, available: players !== null, source },
-    { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } }
+    { headers: { "Cache-Control": "no-store, max-age=0" } }
   );
 }
