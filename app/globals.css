@@ -186,3 +186,18 @@ html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height
 .admin-panel>.admin-table{max-height:calc(100vh - 270px);overflow:auto;scrollbar-width:thin;scrollbar-color:#2b6473 #071019}
 .admin-panel>.admin-table::-webkit-scrollbar{width:8px;height:8px}.admin-panel>.admin-table::-webkit-scrollbar-thumb{background:#2b6473;border-radius:8px}
 .admin-panel>.admin-table .admin-th{position:sticky;top:0;z-index:4}
+
+/* V5.10.3 – Creature manager UI */
+.creature-admin-form{display:grid;grid-template-columns:minmax(280px,1fr) minmax(260px,.42fr) 150px;gap:14px;align-items:end;padding:20px;background:linear-gradient(135deg,rgba(10,25,35,.92),rgba(6,13,20,.98));border-bottom:1px solid #18323f}
+.creature-admin-form>label{display:grid;gap:7px;min-width:0;color:#8fa9b8;font-size:10px;font-weight:900;letter-spacing:.08em}
+.creature-admin-form>label>span{line-height:1}
+.creature-admin-form input[type=text],.creature-admin-form input:not([type=file]){width:100%;height:44px;box-sizing:border-box;padding:0 13px;border:1px solid #274656;border-radius:9px;background:#08151e;color:#eef8fb;font-size:12px;outline:none}
+.creature-admin-form input[type=file]{width:100%;height:44px;box-sizing:border-box;padding:7px 9px;border:1px solid #274656;border-radius:9px;background:#08151e;color:#91a9b7;font-size:10px}
+.creature-admin-form input[type=file]::file-selector-button{height:28px;margin-right:10px;border:1px solid #2a5869;border-radius:6px;background:#102532;color:#dffcf8;font-weight:800;font-size:9px;cursor:pointer}
+.creature-admin-form>.accent-button{height:44px;justify-content:center;white-space:nowrap}
+.creature-admin-list{padding:0 20px 16px}
+.creature-admin-row{grid-template-columns:58px minmax(220px,1.15fr) minmax(220px,1fr) 100px 120px!important;min-width:820px;min-height:58px;padding:8px 4px;box-sizing:border-box}
+.creature-admin-head{min-height:38px;padding-top:0;padding-bottom:0}
+.creature-admin-row .admin-icon-preview{width:44px;height:44px}
+@media(max-width:1000px){.creature-admin-form{grid-template-columns:1fr 1fr}.creature-admin-form>.accent-button{grid-column:1/-1}}
+@media(max-width:650px){.creature-admin-form{grid-template-columns:1fr}.creature-admin-form>.accent-button{grid-column:auto}}
