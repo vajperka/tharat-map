@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {sql} from "@/lib/db";
+export async function GET(){const db=sql();return NextResponse.json(await db`SELECT r.id,r.type_key,r.name_cs,r.name_en,r.icon_url,r.color,r.active,COUNT(m.id)::int marker_count FROM resources r LEFT JOIN markers m ON m.type=r.type_key AND m.approval_status='approved' WHERE r.active=true GROUP BY r.id ORDER BY r.sort_order,r.name_cs`)}

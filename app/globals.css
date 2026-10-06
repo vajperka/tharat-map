@@ -144,3 +144,8 @@ body{background:#030813;background-image:radial-gradient(circle at 72% 0%,rgba(2
 .profile-card-stack .danger-button{justify-self:start;align-self:end}
 .profile-settings-grid .danger-zone{background:linear-gradient(135deg,rgba(40,15,23,.48),rgba(8,15,22,.96));border-color:#63303b}
 @media(max-width:850px){.profile-settings-grid{grid-template-columns:1fr}}
+
+/* V5.10 profile page must scroll independently of map layout */
+html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height:100%!important;overflow-y:auto!important;overflow-x:hidden!important}
+.profile-page{height:auto!important;min-height:100vh!important;overflow:visible!important;padding-bottom:140px!important}
+.resource-admin-form{display:grid;grid-template-columns:1fr 1fr 130px auto;gap:9px;align-items:end;margin-bottom:18px}.resource-admin-form label,.icon-upload-field{display:grid;gap:6px;font-size:9px;color:#8ca2b0;font-weight:900}.resource-admin-form input,.icon-upload-field input{min-width:0;background:#07121a;border:1px solid #294555;color:#eef8fb;border-radius:8px;padding:10px}.admin-icon-preview{width:42px;height:42px;border-radius:9px;object-fit:contain;background:#09151e;border:1px solid #294555;padding:4px}.resource-admin-row{display:grid;grid-template-columns:54px 1fr 1fr 100px 100px;gap:12px;align-items:center;padding:9px 8px;border-top:1px solid #17303d}.creature-admin-row{grid-template-columns:48px 1fr 1fr 90px 100px!important}@media(max-width:900px){.resource-admin-form{grid-template-columns:1fr}.resource-admin-row{grid-template-columns:44px 1fr}.profile-page{padding-bottom:180px!important}}

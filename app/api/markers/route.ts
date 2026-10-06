@@ -3,13 +3,13 @@ import { z } from "zod";
 import { auth } from "@/auth";
 import { sql } from "@/lib/db";
 
-const allowedTypes = [
+const builtInTypes = [
   "metal","richmetal","crystal","obsidian","oil","oilvein","sulfur",
   "silica","blackpearls","element","redingot","diamondingot","goldingot","cave","artifact","boss","loot","base","creature"
 ] as const;
 
 const markerSchema = z.object({
-  type: z.enum(allowedTypes),
+  type: z.string().trim().regex(/^[a-z0-9-]+$/).max(60),
   name: z.string().trim().min(1).max(100),
   lat: z.number().min(0).max(100),
   lon: z.number().min(0).max(100),
@@ -23,7 +23,7 @@ export async function GET() {
   const db = sql();
   const rows = await db`
     SELECT m.id, m.type, m.name, m.lat::float8 AS lat, m.lon::float8 AS lon,
-           m.note, m.image_url, m.creature_slug, c.name AS creature_name, m.status, m.approval_status, m.submitted_by, u.name AS submitter_name, u.avatar_url AS submitter_avatar_url, m.created_at
+           m.note, m.image_url, m.creature_slug, c.name AS creature_name, c.icon_url AS creature_icon_url, m.status, m.approval_status, m.submitted_by, u.name AS submitter_name, u.avatar_url AS submitter_avatar_url, m.created_at
     FROM markers m
     LEFT JOIN creatures c ON c.slug=m.creature_slug
     LEFT JOIN users u ON u.id=m.submitted_by
@@ -42,6 +42,8 @@ export async function POST(req: Request) {
   try {
     const body = markerSchema.parse(await req.json());
     const db = sql();
+    const validType = (builtInTypes as readonly string[]).includes(body.type) || (await db`SELECT 1 FROM resources WHERE type_key=${body.type} AND active=true`).length>0;
+    if(!validType) return NextResponse.json({error:"Neplatný typ lokace."},{status:400});
     const publishNow = session.user.role === "admin" && body.publishImmediately === true;
     const creatureSlug = body.type === "creature" ? body.creatureSlug : null;
     if (body.type === "creature" && !creatureSlug) return NextResponse.json({ error: "Vyber tvora." }, { status: 400 });
