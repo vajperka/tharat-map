@@ -460,3 +460,18 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 /* V5.19.1 — feedback FAB moved to top-right to avoid map coordinates */
 .feedback-fab{top:82px;right:18px;bottom:auto}
 @media(max-width:650px){.feedback-fab{top:72px;right:12px;bottom:auto}}
+
+/* V5.19.2 — feedback readability */
+.feedback-fab{font-size:12px}
+.feedback-card .kicker{font-size:10px}
+.feedback-card h2{font-size:24px;line-height:1.2}
+.feedback-card label{font-size:11px;line-height:1.35}
+.feedback-card textarea,.feedback-card input{font-size:14px;line-height:1.5}
+.feedback-card label small{font-size:10px}
+.feedback-types button{font-size:11px}
+.feedback-send{font-size:11px}
+.feedback-error{font-size:11px}
+.feedback-success h3{font-size:18px}
+.feedback-success p{font-size:13px;line-height:1.55}
+.feedback-success button{font-size:11px}
+@media(max-width:650px){.feedback-fab{font-size:0}.feedback-fab span{font-size:17px}.feedback-card{padding:20px}.feedback-card h2{font-size:21px}.feedback-card label{font-size:11px}.feedback-card textarea,.feedback-card input{font-size:16px}.feedback-types button{font-size:11px}}
