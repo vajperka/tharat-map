@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useMemo,useState} from 'react';import type{Marker}from'@/lib/types';import LanguageSwitcher from './LanguageSwitcher';
-const TYPES=['metal','richmetal','crystal','obsidian','oil','oilvein','sulfur','silica','blackpearls','element','cave','artifact','boss','loot','base','creature'];
+const TYPES=['metal','crystal','obsidian','oil','oilvein','sulfur','silica','blackpearls','element','cave','artifact','loot','creature'];
 type User={id:string;name:string;email:string;role:string;banned:boolean;banned_reason?:string;created_at:string;marker_count:number;approved_count:number;rejected_count:number};
 type Creature={id:number;slug:string;name:string;active:boolean;marker_count:number};
 export default function AdminDashboard(){const[tab,setTab]=useState('overview'),[markers,setMarkers]=useState<any[]>([]),[users,setUsers]=useState<User[]>([]),[stats,setStats]=useState<any>({}),[activity,setActivity]=useState<any[]>([]),[q,setQ]=useState(''),[status,setStatus]=useState('all'),[edit,setEdit]=useState<any>(null),[userDetail,setUserDetail]=useState<User|null>(null),[ban,setBan]=useState<User|null>(null),[reason,setReason]=useState(''),[del,setDel]=useState<any>(null),[busy,setBusy]=useState(false),[photo,setPhoto]=useState<File|null>(null),[creatures,setCreatures]=useState<Creature[]>([]),[newCreature,setNewCreature]=useState('');
