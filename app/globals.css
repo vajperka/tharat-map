@@ -171,3 +171,18 @@ html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height
 .admin-remove-photo:hover{background:#561724!important;color:#fff!important;border-color:#ff667b!important}
 .admin-file-picker{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;margin:0!important;padding:11px 13px;border:1px dashed #315363;border-radius:8px;color:#c8dce5!important;background:#0a1821;cursor:pointer}.admin-file-picker:hover{border-color:#32d9c1;background:#0b2026}.admin-file-picker span{font-size:9px;font-weight:900;color:#7ff0de}.admin-file-picker small{font-size:10px;color:#7c94a3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:1100px){.resource-admin-form{grid-template-columns:1fr 1fr}.resource-admin-form>.accent-button{grid-column:1/-1}}@media(max-width:700px){.resource-admin-form{grid-template-columns:1fr}.resource-admin-form>.accent-button{grid-column:auto}}
+
+/* V5.10.2 admin scrolling + compact profile activity */
+.admin-v2{height:100vh!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box;scrollbar-gutter:stable}
+.admin-panel{max-width:100%;min-width:0}
+.admin-section-scroll{max-height:calc(100vh - 330px);min-height:220px;overflow-y:auto;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#2b6473 #071019}
+.admin-section-scroll::-webkit-scrollbar{width:8px;height:8px}.admin-section-scroll::-webkit-scrollbar-track{background:#071019}.admin-section-scroll::-webkit-scrollbar-thumb{background:#2b6473;border-radius:8px;border:2px solid #071019}
+.creature-admin-head,.admin-section-scroll>.resource-admin-row:first-child{position:sticky;top:0;z-index:3;background:#07121a}
+.creature-admin-row,.resource-admin-row{min-width:760px}
+.profile-community-col{display:flex;flex-direction:column;align-items:stretch}
+.profile-show-all{margin-top:auto;padding:9px 10px;border:1px solid #24576a;border-radius:7px;background:#0a1b25;color:#62e5ed;font-size:8px;font-weight:900;letter-spacing:.06em;cursor:pointer}
+.profile-show-all:hover{border-color:#3ee7ee;background:#0d2933;color:#c8fcff}
+@media(max-width:900px){.admin-v2{padding:18px 14px}.admin-section-scroll{max-height:calc(100vh - 280px)}}
+.admin-panel>.admin-table{max-height:calc(100vh - 270px);overflow:auto;scrollbar-width:thin;scrollbar-color:#2b6473 #071019}
+.admin-panel>.admin-table::-webkit-scrollbar{width:8px;height:8px}.admin-panel>.admin-table::-webkit-scrollbar-thumb{background:#2b6473;border-radius:8px}
+.admin-panel>.admin-table .admin-th{position:sticky;top:0;z-index:4}
