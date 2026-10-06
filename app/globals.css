@@ -367,3 +367,7 @@ html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height
   object-position:center!important;
   border-radius:50%!important;
 }
+
+/* v5.15 base location + selected marker */
+.base-location-form{display:grid;grid-template-columns:120px 120px auto auto;gap:10px;align-items:end}.base-location-form label{display:grid;gap:6px;color:#82a3b4;font-size:10px;font-weight:900;letter-spacing:.08em}.base-location-form input{height:42px;border:1px solid #294958;border-radius:9px;background:#07151f;color:#e9f8fa;padding:0 12px;font-size:14px}.private-base-marker{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#123746,#07151f);border:2px solid #54f1e4;color:#fff;font-size:24px;box-shadow:0 0 0 4px #06131dcc,0 0 24px #35e7d899}.selected-map-marker{transform:scale(1.22);filter:drop-shadow(0 0 9px #fff) drop-shadow(0 0 16px var(--marker-color));outline:2px solid #fff;outline-offset:4px}.selected-marker-label{display:inline-flex;align-items:center;gap:6px;margin:0 42px 8px 0;padding:6px 9px;border:1px solid #3ddde7;border-radius:999px;background:#0b3038;color:#79f5f5;font-size:9px;font-weight:950;letter-spacing:.08em}.profile-base-card{gap:24px}
+@media(max-width:800px){.base-location-form{grid-template-columns:1fr 1fr}.base-location-form button{min-height:44px}.selected-marker-label{font-size:10px}}
