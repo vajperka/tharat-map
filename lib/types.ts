@@ -17,5 +17,6 @@ export type Marker = {
   submitted_by: string | null;
   submitter_name?: string | null;
   submitter_avatar_url?: string | null;
+  submitter_approved_count?: number;
   created_at: string;
 };
