@@ -1,10 +1,10 @@
 export const CONTRIBUTOR_RANKS = [
-  {min:0, name:'Nováček', icon:'🦤'},
-  {min:3, name:'Průzkumník', icon:'🧭'},
-  {min:10, name:'Lovec', icon:'🦖'},
-  {min:25, name:'Kartograf', icon:'🗺️'},
-  {min:50, name:'Expert Tharatu', icon:'💎'},
-  {min:100, name:'Legenda Tharatu', icon:'👑'},
+  {min:0, key:'novice', name:'Nováček', icon:'🦤'},
+  {min:3, key:'explorer', name:'Průzkumník', icon:'🧭'},
+  {min:10, key:'hunter', name:'Lovec', icon:'🦖'},
+  {min:25, key:'cartographer', name:'Kartograf', icon:'🗺️'},
+  {min:50, key:'expert', name:'Expert Tharatu', icon:'💎'},
+  {min:100, key:'legend', name:'Legenda Tharatu', icon:'👑'},
 ] as const;
 export function contributorRank(count:number){
   const n=Math.max(0,Number(count)||0); let index=0;
