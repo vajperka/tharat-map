@@ -130,3 +130,6 @@ Adds user listing and account blocking, full marker management/editing including
 Before deploying V5.6, run `scripts/creatures-migration.sql` in Neon. If the Neon editor rejects multiple commands, run each statement separately.
 
 Adds a searchable expandable Creature Spawn filter, per-creature marker counts, persistent creature selections, required creature selection when creating Creature Spawn markers, and an Admin → TVOROVÉ tab for adding or hiding creatures without redeploying.
+
+## V5.9 Community upgrade
+Run `scripts/community-v5.9-migration.sql` in Neon before deploying this version. It adds favorites, visited locations, community confirmations, comments, reports and notifications.

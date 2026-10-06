@@ -1,0 +1,9 @@
+-- THARAT V5.9 Community features. Run statements individually in Neon if needed.
+CREATE TABLE IF NOT EXISTS marker_favorites (user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE, marker_id bigint NOT NULL REFERENCES markers(id) ON DELETE CASCADE, created_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(user_id,marker_id));
+CREATE TABLE IF NOT EXISTS marker_visits (user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE, marker_id bigint NOT NULL REFERENCES markers(id) ON DELETE CASCADE, created_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(user_id,marker_id));
+CREATE TABLE IF NOT EXISTS marker_confirmations (user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE, marker_id bigint NOT NULL REFERENCES markers(id) ON DELETE CASCADE, created_at timestamptz NOT NULL DEFAULT now(), PRIMARY KEY(user_id,marker_id));
+CREATE TABLE IF NOT EXISTS marker_comments (id bigserial PRIMARY KEY, marker_id bigint NOT NULL REFERENCES markers(id) ON DELETE CASCADE, user_id uuid REFERENCES users(id) ON DELETE SET NULL, body text NOT NULL CHECK(char_length(body) BETWEEN 1 AND 500), created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS marker_reports (id bigserial PRIMARY KEY, marker_id bigint NOT NULL REFERENCES markers(id) ON DELETE CASCADE, user_id uuid REFERENCES users(id) ON DELETE SET NULL, reason text NOT NULL, detail text NOT NULL DEFAULT '', status text NOT NULL DEFAULT 'open', created_at timestamptz NOT NULL DEFAULT now());
+CREATE TABLE IF NOT EXISTS notifications (id bigserial PRIMARY KEY, user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE, text text NOT NULL, href text, read_at timestamptz, created_at timestamptz NOT NULL DEFAULT now());
+CREATE INDEX IF NOT EXISTS marker_comments_marker_idx ON marker_comments(marker_id,created_at);
+CREATE INDEX IF NOT EXISTS notifications_user_idx ON notifications(user_id,created_at DESC);

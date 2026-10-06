@@ -1,0 +1,2 @@
+import {NextResponse} from "next/server";import {sql} from "@/lib/db";
+export async function GET(_:Request,{params}:{params:Promise<{id:string}>}){const {id}=await params;const db=sql();const u=(await db`SELECT id,name,avatar_url,created_at FROM users WHERE id=${id}`)[0];if(!u)return NextResponse.json({error:"Not found"},{status:404});const markers=await db`SELECT id,name,type,lat::float8 lat,lon::float8 lon,created_at FROM markers WHERE submitted_by=${id} AND approval_status='approved' ORDER BY created_at DESC LIMIT 100`;return NextResponse.json({user:u,markers})}

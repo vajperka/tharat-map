@@ -1,0 +1,3 @@
+import {NextResponse} from "next/server";import {auth} from "@/auth";import {sql} from "@/lib/db";
+export async function GET(){const s=await auth();if(!s?.user?.id)return NextResponse.json({items:[],unread:0});const db=sql();const items=await db`SELECT id,text,href,read_at,created_at FROM notifications WHERE user_id=${s.user.id} ORDER BY created_at DESC LIMIT 20`;return NextResponse.json({items,unread:items.filter((x:any)=>!x.read_at).length})}
+export async function POST(){const s=await auth();if(!s?.user?.id)return NextResponse.json({error:"Unauthorized"},{status:401});const db=sql();await db`UPDATE notifications SET read_at=now() WHERE user_id=${s.user.id} AND read_at IS NULL`;return NextResponse.json({ok:true})}
