@@ -375,3 +375,8 @@ html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height
 /* V5.15.2 — ARKSurvival.cz server link */
 .server-link{display:inline-flex;align-items:center;gap:7px;text-decoration:none!important;border-color:rgba(39,225,193,.42)!important;color:#dffdfa!important;white-space:nowrap}.server-link span{font-size:9px;font-weight:900;letter-spacing:.06em}.server-link:hover{border-color:rgba(39,225,193,.8)!important;background:linear-gradient(180deg,rgba(17,47,55,.98),rgba(8,24,32,.98))!important;box-shadow:0 0 20px rgba(39,225,193,.12)!important}
 @media(max-width:900px){.server-link{min-width:42px;width:42px;padding:0!important;justify-content:center}.server-link span{display:none}}
+
+/* V5.15.3 — live Tharat Ascended population */
+.server-link .server-dino{font-size:14px;line-height:1}.server-link .server-name{font-size:9px;font-weight:900;letter-spacing:.06em}.server-online{display:inline-flex!important;align-items:center;gap:5px;margin-left:2px;padding:4px 7px;border:1px solid rgba(74,222,128,.28);border-radius:999px;background:rgba(22,101,52,.16);color:#9ff6b7;font-size:9px!important;font-weight:900;letter-spacing:.045em;white-space:nowrap}.server-online i{display:block;width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px rgba(74,222,128,.85)}
+@media(max-width:900px){.server-link{width:auto!important;min-width:42px!important;padding:0 9px!important;gap:5px!important}.server-link .server-name{display:none!important}.server-online{display:inline-flex!important;padding:3px 5px;font-size:8px!important}.server-online i{width:5px;height:5px}}
+@media(max-width:430px){.server-online{max-width:82px;overflow:hidden;text-overflow:ellipsis}.server-online i{flex:0 0 auto}}
