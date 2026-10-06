@@ -306,3 +306,18 @@ html:has(.profile-page),body:has(.profile-page){height:auto!important;min-height
 @media(max-width:900px){
   .language-menu-portal{max-height:min(260px,calc(100dvh - 24px))!important}
 }
+
+/* V5.14 — optional animated admin avatar frame */
+.admin-animated-frame{position:relative;isolation:isolate;overflow:visible!important;background:#07131c!important}
+.admin-animated-frame::before,.admin-animated-frame::after{content:"";position:absolute;pointer-events:none;border-radius:inherit}
+.admin-animated-frame::before{inset:-5px;z-index:-2;background:conic-gradient(from var(--admin-frame-angle,0deg),#26f4ff,#7c4dff,#ff3ec9,#ffd45a,#26f4ff);animation:adminFrameSpin 3.2s linear infinite;filter:drop-shadow(0 0 8px rgba(38,244,255,.7)) drop-shadow(0 0 13px rgba(124,77,255,.42))}
+.admin-animated-frame::after{inset:-2px;z-index:-1;background:#07131c;box-shadow:0 0 16px rgba(38,244,255,.55),0 0 28px rgba(124,77,255,.25);animation:adminFrameGlow 1.8s ease-in-out infinite alternate}
+@keyframes adminFrameSpin{to{--admin-frame-angle:360deg}}
+@keyframes adminFrameGlow{from{filter:brightness(.9)}to{filter:brightness(1.35)}}
+@property --admin-frame-angle{syntax:"<angle>";initial-value:0deg;inherits:false}
+.profile-avatar.admin-animated-frame{padding:5px}
+.marker-proposer-avatar.admin-animated-frame{margin:5px;width:42px!important;height:42px!important}
+.admin-frame-settings{border-color:#31566f;background:radial-gradient(circle at 80% 30%,rgba(121,73,255,.11),transparent 34%),linear-gradient(135deg,rgba(11,27,38,.98),rgba(6,15,23,.98))}
+.admin-frame-control{display:flex;align-items:center;justify-content:flex-end;gap:18px}.admin-frame-preview{width:66px;height:66px;border-radius:18px;padding:4px;background:#10232e;display:grid;place-items:center}.admin-frame-preview img,.admin-frame-preview>span{width:100%;height:100%;border-radius:14px;object-fit:cover;background:#09151e;display:grid;place-items:center;font-size:24px;font-weight:900;color:#dffcff}
+@media(max-width:700px){.admin-frame-control{justify-content:flex-start;flex-wrap:wrap}}
+@media(prefers-reduced-motion:reduce){.admin-animated-frame::before,.admin-animated-frame::after{animation:none}}

@@ -17,6 +17,8 @@ export type Marker = {
   submitted_by: string | null;
   submitter_name?: string | null;
   submitter_avatar_url?: string | null;
+  submitter_role?: Role | null;
+  submitter_admin_frame_enabled?: boolean;
   submitter_approved_count?: number;
   created_at: string;
   featured?: boolean;

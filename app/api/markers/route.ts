@@ -23,7 +23,7 @@ export async function GET() {
   const db = sql();
   const rows = await db`
     SELECT m.id, m.type, m.name, m.lat::float8 AS lat, m.lon::float8 AS lon,
-           m.note, m.image_url, m.creature_slug, c.name AS creature_name, c.icon_url AS creature_icon_url, m.status, m.approval_status, m.featured, m.submitted_by, u.name AS submitter_name, u.avatar_url AS submitter_avatar_url, (SELECT COUNT(*)::int FROM markers am WHERE am.submitted_by=m.submitted_by AND am.approval_status='approved') AS submitter_approved_count, m.created_at
+           m.note, m.image_url, m.creature_slug, c.name AS creature_name, c.icon_url AS creature_icon_url, m.status, m.approval_status, m.featured, m.submitted_by, u.name AS submitter_name, u.avatar_url AS submitter_avatar_url, u.role AS submitter_role, u.admin_frame_enabled AS submitter_admin_frame_enabled, (SELECT COUNT(*)::int FROM markers am WHERE am.submitted_by=m.submitted_by AND am.approval_status='approved') AS submitter_approved_count, m.created_at
     FROM markers m
     LEFT JOIN creatures c ON c.slug=m.creature_slug
     LEFT JOIN users u ON u.id=m.submitted_by
