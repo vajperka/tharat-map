@@ -15,5 +15,6 @@ export type Marker = {
   approval_status: ApprovalStatus;
   submitted_by: string | null;
   submitter_name?: string | null;
+  submitter_avatar_url?: string | null;
   created_at: string;
 };

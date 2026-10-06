@@ -5,7 +5,7 @@ import { sql } from "@/lib/db";
 
 const allowedTypes = [
   "metal","richmetal","crystal","obsidian","oil","oilvein","sulfur",
-  "silica","blackpearls","element","cave","artifact","boss","loot","base","creature"
+  "silica","blackpearls","element","redingot","diamondingot","goldingot","cave","artifact","boss","loot","base","creature"
 ] as const;
 
 const markerSchema = z.object({
@@ -23,9 +23,10 @@ export async function GET() {
   const db = sql();
   const rows = await db`
     SELECT m.id, m.type, m.name, m.lat::float8 AS lat, m.lon::float8 AS lon,
-           m.note, m.image_url, m.creature_slug, c.name AS creature_name, m.status, m.approval_status, m.submitted_by, m.created_at
+           m.note, m.image_url, m.creature_slug, c.name AS creature_name, m.status, m.approval_status, m.submitted_by, u.name AS submitter_name, u.avatar_url AS submitter_avatar_url, m.created_at
     FROM markers m
     LEFT JOIN creatures c ON c.slug=m.creature_slug
+    LEFT JOIN users u ON u.id=m.submitted_by
     WHERE m.approval_status='approved'
     ORDER BY m.created_at ASC
   `;
