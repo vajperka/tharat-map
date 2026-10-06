@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import AuthNav from "@/components/AuthNav";
 import MapClient from "@/components/MapClient";
 import TopCopy from "@/components/TopCopy";
+import FeedbackButton from "@/components/FeedbackButton";
 
 export default async function Home() {
   const session = await auth();
@@ -13,6 +14,7 @@ export default async function Home() {
         <AuthNav user={session?.user || null} />
       </header>
       <MapClient user={session?.user || null} />
+      <FeedbackButton />
     </main>
   );
 }
