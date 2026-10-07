@@ -486,3 +486,6 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .feedback-toolbar-button:hover{transform:translateY(-1px);border-color:#5ef5ef;box-shadow:0 12px 34px rgba(0,0,0,.32),0 0 25px rgba(53,226,221,.2)}
 .feedback-toolbar-button span{font-size:17px}
 @media(max-width:650px){.feedback-toolbar-button{position:static!important;inset:auto!important;width:auto!important;min-width:44px;padding:0 12px;font-size:0}.feedback-toolbar-button span{font-size:17px}}
+
+/* V5.20 manual marker coordinates */
+.selection-actions{display:flex;align-items:center;gap:10px}.selection-banner .manual-position-button{padding:7px 10px;border:1px solid rgba(39,225,193,.35);border-radius:7px;background:rgba(39,225,193,.09);color:var(--accent)}.editable-position>label{padding:9px 12px;margin:0}.editable-position>label span{margin-bottom:4px}.editable-position input{width:100%;height:32px!important;padding:0!important;border:0!important;background:transparent!important;color:var(--accent)!important;font-size:17px;font-weight:800;box-shadow:none!important}.editable-position input:focus{outline:none!important;box-shadow:none!important}.editable-position input::-webkit-inner-spin-button{opacity:.45}@media(max-width:900px){.selection-actions{gap:5px}.selection-banner .manual-position-button{padding:6px 7px;font-size:8px}.editable-position>label{padding:8px 10px}}
