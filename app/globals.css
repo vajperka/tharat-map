@@ -475,3 +475,8 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .feedback-success p{font-size:13px;line-height:1.55}
 .feedback-success button{font-size:11px}
 @media(max-width:650px){.feedback-fab{font-size:0}.feedback-fab span{font-size:17px}.feedback-card{padding:20px}.feedback-card h2{font-size:21px}.feedback-card label{font-size:11px}.feedback-card textarea,.feedback-card input{font-size:16px}.feedback-types button{font-size:11px}}
+
+/* V5.19.3 — Feedback lives in the map toolbar beside Add Marker */
+.map-toolbar .feedback-fab{position:static;inset:auto;z-index:auto;height:var(--toolbar-control-height,44px);min-height:44px;padding:0 15px;flex:0 0 auto;margin:0;transform:none}
+.map-toolbar .feedback-fab:hover{transform:translateY(-1px)}
+@media(max-width:650px){.map-toolbar .feedback-fab{position:static;inset:auto;width:auto;min-width:44px;padding:0 12px;font-size:0}.map-toolbar .feedback-fab span{font-size:17px}}
