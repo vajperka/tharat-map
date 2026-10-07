@@ -1,5 +1,6 @@
-import FeedbackButton from "@/components/FeedbackButton";
 "use client";
+
+import FeedbackButton from "@/components/FeedbackButton";
 
 import { contributorRank } from "@/lib/ranks";
 

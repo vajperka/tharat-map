@@ -141,7 +141,7 @@ body{background:#030813;background-image:radial-gradient(circle at 72% 0%,rgba(2
 /* v5.9.2 profile repair: keep account controls visible and balanced */
 .profile-settings-grid{display:grid;grid-template-columns:1.35fr .85fr;gap:14px;margin-top:14px;align-items:stretch}
 .profile-settings-grid .profile-card{margin:0;grid-template-columns:1fr;padding:22px;gap:18px}
-.profile-card-stack .danger-button{justify-self:start;align-self:end}
+.profile-card-stack .danger-button{justify-self:start;align-self:flex-end}
 .profile-settings-grid .danger-zone{background:linear-gradient(135deg,rgba(40,15,23,.48),rgba(8,15,22,.96));border-color:#63303b}
 @media(max-width:850px){.profile-settings-grid{grid-template-columns:1fr}}
 
