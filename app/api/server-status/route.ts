@@ -39,7 +39,7 @@ export async function GET() {
 
     if (!tharat || !Array.isArray(tharat.players)) {
       return NextResponse.json(
-        { server: "Tharat", game: "Ascended", players: null, available: false, source: "arksurvival.cz/api_ascended.php" },
+        { server: "Tharat", game: "Ascended", players: null, playerList: [], available: false, source: "arksurvival.cz/api_ascended.php" },
         { headers: { "Cache-Control": "no-store, max-age=0" } }
       );
     }
@@ -49,6 +49,10 @@ export async function GET() {
         server: "Tharat",
         game: "Ascended",
         players: tharat.players.length,
+        playerList: tharat.players.map(player => ({
+          name: String(player?.name || "Unknown"),
+          playTime: String(player?.playTime || "—"),
+        })),
         available: true,
         source: "arksurvival.cz/api_ascended.php",
       },
@@ -60,6 +64,7 @@ export async function GET() {
         server: "Tharat",
         game: "Ascended",
         players: null,
+        playerList: [],
         available: false,
         source: "arksurvival.cz/api_ascended.php",
       },
