@@ -43,16 +43,19 @@ const IMAGE_TYPES=["image/jpeg","image/png","image/webp"]; const MAX_IMAGE_BYTES
 const MAP_ASPECT=1727/911;
 const MAP_WIDTH=100*MAP_ASPECT;
 const MAP_BOUNDS:[[number,number],[number,number]]=[[0,0],[100,MAP_WIDTH]];
-// The in-game screenshots at LAT/LON 20/20, 20/80, 50/50, 80/20 and 80/80
-// show a regular 0–100 coordinate grid across the map image. The old +0.50/+3.44
-// single-point offsets displaced every marker and were not a scale correction.
-// Leaflet uses a 100-unit-high rectangle with width scaled by the image aspect.
-// Keep stored game coordinates untouched; only convert the horizontal display axis.
+// Calibrated against five actual in-game locations (20/20, 50/50, 80/80,
+// 20/80, 80/20) by matching screenshot terrain to tharat-map.png pixels.
+// Game coordinates are retained unchanged in the database.
+// Web image percentages = slope * game coordinate + intercept.
+const LAT_SCALE=1.1326;
+const LAT_ORIGIN=-9.2818;
+const LON_SCALE=0.92628333;
+const LON_ORIGIN=1.71703333;
 const clampGame=(v:number)=>Math.max(0,Math.min(100,v));
-const webLatToGame=(lat:number)=>clampGame(lat);
-const gameLatToWeb=(lat:number)=>clampGame(lat);
-const webLonToGame=(lon:number)=>clampGame(lon);
-const gameLonToWeb=(lon:number)=>clampGame(lon);
+const webLatToGame=(lat:number)=>clampGame((lat-LAT_ORIGIN)/LAT_SCALE);
+const gameLatToWeb=(lat:number)=>LAT_SCALE*lat+LAT_ORIGIN;
+const webLonToGame=(lon:number)=>clampGame((lon-LON_ORIGIN)/LON_SCALE);
+const gameLonToWeb=(lon:number)=>LON_SCALE*lon+LON_ORIGIN;
 const lonToX=(gameLon:number)=>gameLonToWeb(gameLon)*MAP_ASPECT;
 const xToLon=(x:number)=>webLonToGame(x/MAP_ASPECT);
 
