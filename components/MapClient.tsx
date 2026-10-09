@@ -43,21 +43,47 @@ const IMAGE_TYPES=["image/jpeg","image/png","image/webp"]; const MAX_IMAGE_BYTES
 const MAP_ASPECT=1727/911;
 const MAP_WIDTH=100*MAP_ASPECT;
 const MAP_BOUNDS:[[number,number],[number,number]]=[[0,0],[100,MAP_WIDTH]];
-// Calibrated against five actual in-game locations (20/20, 50/50, 80/80,
-// 20/80, 80/20) by matching screenshot terrain to tharat-map.png pixels.
-// Game coordinates are retained unchanged in the database.
-// Web image percentages = slope * game coordinate + intercept.
-const LAT_SCALE=1.1326;
-const LAT_ORIGIN=-9.2818;
-const LON_SCALE=0.92628333;
-const LON_ORIGIN=1.71703333;
+// Five paired measurements: in-game LAT/LON -> underlying image coordinates.
+// The original on-screen readings used the previous V5.23 calibration, so
+// they were converted back to raw image percentages before fitting.
+// Affine base + smooth Gaussian corrections: all five anchors match exactly.
+// Stored database coordinates always remain GAME coordinates.
+const CALIBRATION_POINTS: [number,number][] = [[20,20],[50,50],[80,80],[20,80],[80,20]];
+const CALIBRATION_AFFINE: number[][] = [[-7.888702,0.66909812266],[1.103624316667,0.009648784687],[-0.000471916667,0.943188000773]];
+const CALIBRATION_WEIGHTS: number[][] = [[-1.380119644138,0.580465661396],[3.521072370939,-0.937776315374],[-1.380119644138,0.580465661396],[-1.190338633517,0.104131142787],[-1.190338633517,0.104131142787]];
+const CALIBRATION_SIGMA2=2*26*26;
 const clampGame=(v:number)=>Math.max(0,Math.min(100,v));
-const webLatToGame=(lat:number)=>clampGame((lat-LAT_ORIGIN)/LAT_SCALE);
-const gameLatToWeb=(lat:number)=>LAT_SCALE*lat+LAT_ORIGIN;
-const webLonToGame=(lon:number)=>clampGame((lon-LON_ORIGIN)/LON_SCALE);
-const gameLonToWeb=(lon:number)=>LON_SCALE*lon+LON_ORIGIN;
-const lonToX=(gameLon:number)=>gameLonToWeb(gameLon)*MAP_ASPECT;
-const xToLon=(x:number)=>webLonToGame(x/MAP_ASPECT);
+function gameToImage(lat:number,lon:number):[number,number]{
+ const p=[1,lat,lon];
+ const out:[number,number]=[0,0];
+ for(let axis=0;axis<2;axis++){
+  out[axis]=p.reduce((sum,v,i)=>sum+v*CALIBRATION_AFFINE[i][axis],0);
+  for(let i=0;i<CALIBRATION_POINTS.length;i++){
+   const [a,b]=CALIBRATION_POINTS[i];
+   out[axis]+=CALIBRATION_WEIGHTS[i][axis]*Math.exp(-((lat-a)**2+(lon-b)**2)/CALIBRATION_SIGMA2);
+  }
+ }
+ return out;
+}
+// Numerically invert the SAME transform for mouse clicks and cursor labels.
+function imageToGame(webLat:number,webLon:number):[number,number]{
+ let lat=clampGame(webLat),lon=clampGame(webLon);
+ for(let i=0;i<14;i++){
+  const [y,x]=gameToImage(lat,lon);
+  const dy=webLat-y,dx=webLon-x;
+  if(Math.abs(dy)+Math.abs(dx)<0.0000001)break;
+  const h=0.001;
+  const [yLat,xLat]=gameToImage(lat+h,lon);
+  const [yLon,xLon]=gameToImage(lat,lon+h);
+  const a=(yLat-y)/h,b=(yLon-y)/h,c=(xLat-x)/h,d=(xLon-x)/h;
+  const det=a*d-b*c;
+  if(Math.abs(det)<0.000001)break;
+  lat=clampGame(lat+(dy*d-b*dx)/det);
+  lon=clampGame(lon+(a*dx-c*dy)/det);
+ }
+ return [lat,lon];
+}
+const lonToX=(gameLon:number,gameLat:number)=>gameToImage(gameLat,gameLon)[1]*MAP_ASPECT;
 
 export default function MapClient({user}:{user:any}){
  const {t,language}=useLanguage();
@@ -75,24 +101,24 @@ export default function MapClient({user}:{user:any}){
  useEffect(()=>{load();loadCreatures();loadResources();try{const saved=JSON.parse(localStorage.getItem("tharat-creature-filter")||"[]");if(Array.isArray(saved))setSelectedCreatures(new Set(saved))}catch{}},[]);
  useEffect(()=>{localStorage.setItem("tharat-creature-filter",JSON.stringify([...selectedCreatures]))},[selectedCreatures]);
  useEffect(()=>{if(!selected){setSocial(null);setComments([]);return}setDetailTab("info");fetch(`/api/markers/${selected.id}/social`).then(r=>r.ok?r.json():null).then(setSocial).catch(()=>{});fetch(`/api/markers/${selected.id}/comments`).then(r=>r.ok?r.json():[]).then(setComments).catch(()=>{})},[selected]);
- useEffect(()=>{if(!markers.length)return;const id=new URLSearchParams(location.search).get("marker");if(!id)return;const m=markers.find(x=>String(x.id)===id);if(!m)return;setSelected(m);const focusSharedMarker=()=>{const map=mapRef.current;if(!map)return false;map.invalidateSize(false);const coverZoom=map.getBoundsZoom(MAP_BOUNDS,true);map.setView([100-gameLatToWeb(Number(m.lat)),lonToX(Number(m.lon))],coverZoom,{animate:false});return true};if(!focusSharedMarker()){const timer=window.setInterval(()=>{if(focusSharedMarker())window.clearInterval(timer)},50);const stop=window.setTimeout(()=>window.clearInterval(timer),2000);return()=>{window.clearInterval(timer);window.clearTimeout(stop)}}},[markers]);
+ useEffect(()=>{if(!markers.length)return;const id=new URLSearchParams(location.search).get("marker");if(!id)return;const m=markers.find(x=>String(x.id)===id);if(!m)return;setSelected(m);const focusSharedMarker=()=>{const map=mapRef.current;if(!map)return false;map.invalidateSize(false);const coverZoom=map.getBoundsZoom(MAP_BOUNDS,true);map.setView([100-gameToImage(Number(m.lat),Number(m.lon))[0],lonToX(Number(m.lon),Number(m.lat))],coverZoom,{animate:false});return true};if(!focusSharedMarker()){const timer=window.setInterval(()=>{if(focusSharedMarker())window.clearInterval(timer)},50);const stop=window.setTimeout(()=>window.clearInterval(timer),2000);return()=>{window.clearInterval(timer);window.clearTimeout(stop)}}},[markers]);
  async function socialToggle(kind:string){if(!user){setMode("auth");return}if(!selected)return;const r=await fetch(`/api/markers/${selected.id}/social`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({kind})});if(r.ok)setSocial(await r.json())}
  async function refreshComments(){if(!selected)return;const c=await fetch(`/api/markers/${selected.id}/comments`);if(c.ok)setComments(await c.json())}
  async function addComment(){if(!user){setMode("auth");return}if(!selected||!commentText.trim())return;const r=await fetch(`/api/markers/${selected.id}/comments`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({body:commentText,parentId:replyTo?.id||null})});if(r.ok){setCommentText("");setReplyTo(null);await refreshComments()}}
  async function saveComment(c:any){if(!selected||!editingComment?.body?.trim())return;const r=await fetch(`/api/markers/${selected.id}/comments`,{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify({commentId:c.id,body:editingComment.body})});if(r.ok){setEditingComment(null);await refreshComments()}}
  async function deleteComment(c:any){if(!selected||!confirm(t("comments.deleteConfirm")))return;const r=await fetch(`/api/markers/${selected.id}/comments`,{method:"DELETE",headers:{"content-type":"application/json"},body:JSON.stringify({commentId:c.id})});if(r.ok)await refreshComments()}
- function runSearch(){const m=query.trim().match(/^(?:lat\s*)?(\d+(?:[.,]\d+)?)\s*[,;/ ]\s*(?:lon\s*)?(\d+(?:[.,]\d+)?)$/i);if(!m)return;const lat=Number(m[1].replace(",",".")),lon=Number(m[2].replace(",","."));if(lat<0||lat>100||lon<0||lon>100)return;mapRef.current?.setView([100-gameLatToWeb(lat),lonToX(lon)],2,{animate:true});showTemp(lat,lon);setCoords({lat:lat.toFixed(2),lon:lon.toFixed(2)})}
+ function runSearch(){const m=query.trim().match(/^(?:lat\s*)?(\d+(?:[.,]\d+)?)\s*[,;/ ]\s*(?:lon\s*)?(\d+(?:[.,]\d+)?)$/i);if(!m)return;const lat=Number(m[1].replace(",",".")),lon=Number(m[2].replace(",","."));if(lat<0||lat>100||lon<0||lon>100)return;mapRef.current?.setView([100-gameToImage(lat,lon)[0],lonToX(lon,lat)],2,{animate:true});showTemp(lat,lon);setCoords({lat:lat.toFixed(2),lon:lon.toFixed(2)})}
  function shareMarker(){if(!selected)return;const url=`${location.origin}${location.pathname}?marker=${selected.id}`;navigator.clipboard?.writeText(url);showSuccess("Odkaz na lokaci byl zkopírován.")}
 
- const game=(ll:any)=>({lat:webLatToGame(100-ll.lat),lon:xToLon(ll.lng)});
+ const game=(ll:any)=>{const [lat,lon]=imageToGame(100-ll.lat,ll.lng/MAP_ASPECT);return {lat,lon}};
  function coverMap(){const map=mapRef.current;if(!map)return;map.invalidateSize(false);const z=map.getBoundsZoom(MAP_BOUNDS,true);map.setView([50,MAP_WIDTH/2],z,{animate:false})}
  function clearTemp(){if(temp.current&&mapRef.current){mapRef.current.removeLayer(temp.current);temp.current=null}}
- function showTemp(lat:number,lon:number){const L=leaflet.current;if(!L)return;clearTemp();temp.current=L.marker([100-gameLatToWeb(lat),lonToX(lon)],{interactive:false,icon:L.divIcon({className:"",html:'<div class="temp-map-marker">＋</div>',iconSize:[44,44],iconAnchor:[22,22]})}).addTo(mapRef.current)}
+ function showTemp(lat:number,lon:number){const L=leaflet.current;if(!L)return;clearTemp();temp.current=L.marker([100-gameToImage(lat,lon)[0],lonToX(lon,lat)],{interactive:false,icon:L.divIcon({className:"",html:'<div class="temp-map-marker">＋</div>',iconSize:[44,44],iconAnchor:[22,22]})}).addTo(mapRef.current)}
  function choose(ll:any){if(modeRef.current!=="select")return;const p=game(ll),old=draftRef.current;const d={type:old?.type||"oilvein",name:old?.name||"",note:old?.note||"",lat:+p.lat.toFixed(2),lon:+p.lon.toFixed(2),publishImmediately:old?.publishImmediately??user?.role==="admin",creatureSlug:old?.creatureSlug||null};setDraft(d);showTemp(d.lat,d.lon);setMode("edit");setErrors({})}
  useEffect(()=>{(async()=>{if(!mapNode.current||mapRef.current)return;const L=await import("leaflet");leaflet.current=L;const map=L.map(mapNode.current,{crs:L.CRS.Simple,minZoom:-3,maxZoom:4,zoomControl:false,attributionControl:false,zoomSnap:0.1});L.imageOverlay("/tharat-map.png",MAP_BOUNDS).addTo(map);map.setMaxBounds([[-12,-12],[112,MAP_WIDTH+12]]);map.on("mousemove",(e:any)=>{const p=game(e.latlng);setCoords({lat:p.lat.toFixed(2),lon:p.lon.toFixed(2)})});map.on("click",(e:any)=>choose(e.latlng));mapRef.current=map;requestAnimationFrame(()=>coverMap())})()},[user]);
  useEffect(()=>{let timer:any;const onResize=()=>{clearTimeout(timer);timer=setTimeout(()=>coverMap(),80)};window.addEventListener("resize",onResize);return()=>{clearTimeout(timer);window.removeEventListener("resize",onResize)}},[]);
  const visible=useMemo(()=>markers.filter(m=>enabled.has(m.type)&&(m.type!=="creature"||selectedCreatures.size===0||(m.creature_slug&&selectedCreatures.has(m.creature_slug)))&&(!query||`${m.name} ${m.note} ${m.creature_name||""} ${resources.find(r=>r.type_key===m.type)?.[language==="cs"?"name_cs":"name_en"]||t(`types.${m.type}`)}`.toLowerCase().includes(query.toLowerCase()))),[markers,enabled,query,t,selectedCreatures,resources,language]);
- useEffect(()=>{const L=leaflet.current,map=mapRef.current;if(!L||!map)return;layers.current.forEach(x=>map.removeLayer(x));layers.current=[];visible.forEach(item=>{const rr=resources.find(r=>r.type_key===item.type);const t=rr?{color:rr.color}:TYPE_MAP[item.type]||TYPE_MAP.base;const customIcon=rr?.icon_url?`<img src="${rr.icon_url}" style="width:27px;height:27px;object-fit:contain"/>`:(ICONS[item.type]||"");const isSelected=selected?.id===item.id;const m=L.marker([100-gameLatToWeb(Number(item.lat)),lonToX(Number(item.lon))],{icon:L.divIcon({className:"",html:item.type==="creature"?`<div class="map-marker creature-map-marker ${item.featured?"featured-marker":""} ${isSelected?"selected-map-marker":""}" style="--marker-color:${t.color};border-color:${t.color}aa"><img src="${creatureIcon(item.creature_slug,item.creature_icon_url)}" onerror="this.src='/creatures/default.svg'" /></div>`:`<div class="map-marker ${item.featured?"featured-marker":""} ${isSelected?"selected-map-marker":""}" style="--marker-color:${t.color};color:${t.color};border-color:${t.color}aa"><span class="map-marker-icon">${customIcon}</span></div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map);m.on("click",()=>{if(modeRef.current==="idle")setSelected(item)});layers.current.push(m)});if(baseLocation){const b=L.marker([100-gameLatToWeb(baseLocation.lat),lonToX(baseLocation.lon)],{zIndexOffset:900,icon:L.divIcon({className:"",html:`<div class="private-base-marker" title="${t("profile.myBase")}"><img src="/base-marker.svg" alt="" /></div>`,iconSize:[52,61],iconAnchor:[26,56]})}).addTo(map);b.bindTooltip(t("profile.myBase"),{direction:"top",offset:[0,-18]});layers.current.push(b)}},[visible,resources,selected?.id,baseLocation,t]);
+ useEffect(()=>{const L=leaflet.current,map=mapRef.current;if(!L||!map)return;layers.current.forEach(x=>map.removeLayer(x));layers.current=[];visible.forEach(item=>{const rr=resources.find(r=>r.type_key===item.type);const t=rr?{color:rr.color}:TYPE_MAP[item.type]||TYPE_MAP.base;const customIcon=rr?.icon_url?`<img src="${rr.icon_url}" style="width:27px;height:27px;object-fit:contain"/>`:(ICONS[item.type]||"");const isSelected=selected?.id===item.id;const m=L.marker([100-gameToImage(Number(item.lat),Number(item.lon))[0],lonToX(Number(item.lon),Number(item.lat))],{icon:L.divIcon({className:"",html:item.type==="creature"?`<div class="map-marker creature-map-marker ${item.featured?"featured-marker":""} ${isSelected?"selected-map-marker":""}" style="--marker-color:${t.color};border-color:${t.color}aa"><img src="${creatureIcon(item.creature_slug,item.creature_icon_url)}" onerror="this.src='/creatures/default.svg'" /></div>`:`<div class="map-marker ${item.featured?"featured-marker":""} ${isSelected?"selected-map-marker":""}" style="--marker-color:${t.color};color:${t.color};border-color:${t.color}aa"><span class="map-marker-icon">${customIcon}</span></div>`,iconSize:[34,34],iconAnchor:[17,17]})}).addTo(map);m.on("click",()=>{if(modeRef.current==="idle")setSelected(item)});layers.current.push(m)});if(baseLocation){const b=L.marker([100-gameToImage(baseLocation.lat,baseLocation.lon)[0],lonToX(baseLocation.lon,baseLocation.lat)],{zIndexOffset:900,icon:L.divIcon({className:"",html:`<div class="private-base-marker" title="${t("profile.myBase")}"><img src="/base-marker.svg" alt="" /></div>`,iconSize:[52,61],iconAnchor:[26,56]})}).addTo(map);b.bindTooltip(t("profile.myBase"),{direction:"top",offset:[0,-18]});layers.current.push(b)}},[visible,resources,selected?.id,baseLocation,t]);
  function begin(){setSelected(null);if(!user){setMode("auth");return}setDraft({type:"oilvein",name:"",note:"",lat:50,lon:50,publishImmediately:user.role==="admin",creatureSlug:null});setMode("select")}
  function manualPosition(){const d=draftRef.current||{type:"oilvein",name:"",note:"",lat:50,lon:50,publishImmediately:user?.role==="admin",creatureSlug:null};setDraft(d);showTemp(d.lat,d.lon);setErrors({});setMode("edit")}
  function updatePosition(axis:"lat"|"lon",value:string){if(!draft)return;const parsed=Number(value);if(!Number.isFinite(parsed))return;const next={...draft,[axis]:Math.max(0,Math.min(100,parsed))};setDraft(next);showTemp(next.lat,next.lon)}
