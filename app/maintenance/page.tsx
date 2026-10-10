@@ -10,17 +10,17 @@ export default async function MaintenancePage() {
   if (!active) redirect("/");
   const session = await auth();
   if (session?.user?.role === "admin") redirect("/admin");
-  return <main className="maintenance-screen">
-    <section className="maintenance-card">
-      <img src="/tharat-dino-logo.png" width="86" height="86" alt="THARAT" />
-      <div className="maintenance-kicker">THARAT · ANCIENT SANDS</div>
-      <div className="maintenance-icon">⚒</div>
-      <h1>Web právě upravujeme</h1>
-      <p>Na mapě Tharat momentálně probíhá údržba a vylepšování. Brzy budeme zpátky!</p>
-      <div className="maintenance-rule"/>
-      <h2>Website under maintenance</h2>
-      <p>We’re currently improving the Tharat resource map. We’ll be back soon!</p>
-      <Link href="/login" className="maintenance-admin-link">Přihlášení správce / Admin sign in →</Link>
-    </section>
-  </main>;
+
+  return (
+    <main className="tharat-maintenance" aria-label="Tharat Resource Map — web prochází údržbou">
+      <div className="tharat-maintenance__backdrop" aria-hidden="true" />
+      <div className="tharat-maintenance__scene" role="img" aria-label="Dinosaurus opravář uprostřed egyptské krajiny Tharatu; oznámení o údržbě v češtině a angličtině" />
+      <div className="tharat-maintenance__embers" aria-hidden="true" />
+      <h1 className="tharat-maintenance__sr-only">Web právě prochází údržbou / Website under maintenance</h1>
+      <p className="tharat-maintenance__sr-only">Pracujeme na vylepšeních mapy Tharat. Brzy budeme zpátky. We are improving the Tharat Resource Map and will be back soon.</p>
+      <Link href="/login" className="tharat-maintenance__login">
+        <span aria-hidden="true">⚙</span> Přihlášení správce <span className="tharat-maintenance__login-en">/ Admin sign in</span> <span aria-hidden="true">→</span>
+      </Link>
+    </main>
+  );
 }
