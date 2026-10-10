@@ -1,3 +1,4 @@
+import { hasValidImageSignature } from "@/lib/image-validation";
 import { NextResponse } from "next/server";
 import { put } from "@vercel/blob";
 import { auth } from "@/auth";
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!(await hasValidImageSignature(value))) return NextResponse.json({ error: "Soubor není platný obrázek." }, { status: 415 });
     const ext = value.type === "image/png" ? "png" : value.type === "image/webp" ? "webp" : "jpg";
     const pathname = `markers/${session.user.id}/${Date.now()}.${ext}`;
 
