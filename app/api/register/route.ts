@@ -2,16 +2,21 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { sql } from "@/lib/db";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 const schema = z.object({
   name: z.string().trim().min(2).max(40),
   email: z.string().trim().email().max(254),
   password: z.string().min(8).max(128),
+  captchaToken: z.string().min(1),
 });
 
 export async function POST(req: Request) {
   try {
     const body = schema.parse(await req.json());
+    if (!await verifyTurnstile(body.captchaToken, req.headers.get("cf-connecting-ip"))) {
+      return NextResponse.json({ error: "Robot verification failed" }, { status: 403 });
+    }
     const db = sql();
 
     const existing = await db`SELECT id FROM users WHERE lower(email)=lower(${body.email}) LIMIT 1`;

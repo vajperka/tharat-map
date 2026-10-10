@@ -6,6 +6,7 @@ export type Language = "cs" | "en";
 
 const translations = {
   cs: {
+    captcha:{required:"Potvrď, že nejsi robot.",failed:"Ověření se nezdařilo. Obnov stránku a zkus to znovu.",notConfigured:"Ověření není nakonfigurované. Kontaktuj správce.",or:"NEBO",discord:"PŘIHLÁSIT PŘES DISCORD"},
     common:{login:"Přihlásit",register:"Registrace",logout:"Odhlásit",admin:"ADMINISTRACE",cancel:"ZRUŠIT",delete:"SMAZAT",backMap:"← Zpět na mapu",noNote:"Bez poznámky."},
     header:{map:"INTERAKTIVNÍ MAPA SUROVIN",language:"Jazyk",server:"ARKSURVIVAL.CZ SERVER",tharatOnline:"THARAT • {count} ONLINE",tharatLoading:"THARAT • … ONLINE",tharatUnavailable:"THARAT • -- ONLINE"},
     map:{filters:"FILTRY MAPY",clear:"VYMAZAT",farming:"⚡ DŮLEŽITÉ PRO FARMENÍ",resources:"ZDROJE",locations:"LOKACE",help:"Registrovaní uživatelé mohou navrhovat nové lokace. Veřejné jsou až po schválení adminem.",reset:"RESET FILTRŮ",quick:"RYCHLÉ AKCE",legend:"LEGENDA",approvedMarker:"Schválený marker",pendingMarker:"Čeká na schválení",yourMarker:"Tvůj marker",fitMap:"Zobrazit celou mapu",search:"Hledat zdroje, tvory, jeskyně…",add:"＋ PŘIDAT MARKER",pick:"📍 Klikni na mapu a vyber umístění markeru",done:"HOTOVO",published:"MARKER PUBLIKOVÁN",verified:"✓ OVĚŘENO",openPhoto:"↗ OTEVŘÍT FOTKU",photoAlt:"Fotka lokace",proposedBy:"NAVRHL LOKACI",unknownProposer:"Neznámý uživatel"},
@@ -27,6 +28,7 @@ const translations = {
     admin:{kicker:"THARAT CONTROL CENTER",title:"Admin Dashboard",pending:"ČEKAJÍCÍ",approved:"SCHVÁLENÉ",rejected:"ZAMÍTNUTÉ",all:"CELKEM",empty:"V této kategorii zatím nic není.",unknown:"neznámý uživatel",approve:"✓ SCHVÁLIT",reject:"✕ ZAMÍTNOUT",delete:"SMAZAT",confirmDelete:"Opravdu marker smazat?",tabs:{pending:"ČEKAJÍCÍ",approved:"SCHVÁLENÉ",rejected:"ZAMÍTNUTÉ",all:"VŠE"}}
   },
   en: {
+    captcha:{required:"Please verify you are human.",failed:"Verification failed. Refresh the page and try again.",notConfigured:"Human verification is not configured. Contact the administrator.",or:"OR",discord:"SIGN IN WITH DISCORD"},
     common:{login:"Log in",register:"Register",logout:"Log out",admin:"ADMINISTRATION",cancel:"CANCEL",delete:"DELETE",backMap:"← Back to map",noNote:"No notes."},
     header:{map:"INTERACTIVE RESOURCE MAP",language:"Language",server:"ARKSURVIVAL.CZ SERVER",tharatOnline:"THARAT • {count} ONLINE",tharatLoading:"THARAT • … ONLINE",tharatUnavailable:"THARAT • -- ONLINE"},
     map:{filters:"MAP FILTERS",clear:"CLEAR",farming:"⚡ FARMING ESSENTIALS",resources:"RESOURCES",locations:"LOCATIONS",help:"Registered users can suggest new locations. They become public after admin approval.",reset:"RESET FILTERS",quick:"QUICK ACTIONS",legend:"LEGEND",approvedMarker:"Approved marker",pendingMarker:"Pending approval",yourMarker:"Your marker",fitMap:"Fit full map",search:"Search resources, creatures, caves…",add:"＋ ADD MARKER",pick:"📍 Click the map to choose the marker location",done:"DONE",published:"MARKER PUBLISHED",verified:"✓ VERIFIED",openPhoto:"↗ OPEN PHOTO",photoAlt:"Location photo",proposedBy:"LOCATION PROPOSED BY",unknownProposer:"Unknown user"},

@@ -4,10 +4,13 @@ import Discord from "next-auth/providers/discord";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { sql } from "@/lib/db";
+import { verifyTurnstile, validDiscordProof, cookieName } from "@/lib/turnstile";
+import { cookies } from "next/headers";
 
 const credentialsSchema = z.object({
   email: z.string().email().max(254),
   password: z.string().min(8).max(128),
+  captchaToken: z.string().min(1),
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -24,6 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       async authorize(raw) {
         const parsed = credentialsSchema.safeParse(raw);
         if (!parsed.success) return null;
+        if (!await verifyTurnstile(parsed.data.captchaToken)) return null;
 
         const db = sql();
         const rows = await db`
@@ -50,6 +54,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider !== "discord") return true;
+      const cookieStore = await cookies();
+      if (!validDiscordProof(cookieStore.get(cookieName)?.value)) return false;
+      cookieStore.delete(cookieName);
       if (!user.email) return false;
       const db = sql();
       let rows = await db`SELECT id,name,email,role,banned,banned_until FROM users WHERE lower(email)=lower(${user.email}) LIMIT 1`;
