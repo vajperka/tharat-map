@@ -511,3 +511,46 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .server-modal-footer-v2{padding:20px 32px 24px!important;border-top:0!important;background:linear-gradient(180deg,rgba(19,15,7,.1),rgba(14,11,5,.62))}.server-modal-footer-v2 .server-web-card{grid-template-columns:44px 1fr auto!important;min-height:72px!important;padding:0 20px!important;border-color:#bd9a5a!important;border-radius:13px!important;background:linear-gradient(100deg,rgba(55,43,21,.9),rgba(35,27,13,.92))!important;box-shadow:inset 0 1px rgba(255,255,255,.035),0 0 24px rgba(185,148,79,.05);transition:.18s ease}.server-modal-footer-v2 .server-web-card:hover{transform:translateY(-1px);border-color:#e1c590!important;box-shadow:0 8px 28px rgba(0,0,0,.25),0 0 25px rgba(187,151,85,.10)!important}.server-web-icon{width:38px;height:38px;display:grid;place-items:center;border:1px solid rgba(206,177,123,.38);border-radius:10px;background:rgba(137,110,59,.11);color:#dabf8c;font-size:21px!important}.server-modal-footer-v2 .server-web-card div b{font-size:13px!important}.server-modal-footer-v2 .server-web-card div small{font-size:9px!important;letter-spacing:.09em}.server-refresh-note{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:13px;color:#7c725f;font-size:9px;font-weight:700;letter-spacing:.02em}.server-refresh-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 7px rgba(74,222,128,.7)}
 @media(max-width:600px){.server-modal-v2 .server-modal-hero{min-height:0;padding:25px 58px 20px 18px}.server-brand-logo{width:45px;height:45px;border-radius:12px}.server-brand-logo img{width:35px;height:35px}.server-modal-v2 .server-modal-brand strong{font-size:15px}.server-modal-v2 .server-modal-pills{margin-top:17px}.server-modal-v2 .server-modal-pills>span{min-height:30px;padding:0 10px;font-size:8px}.server-modal-v2 .server-player-head{padding:16px 17px 10px}.server-modal-v2 .server-player-list{padding:0 17px}.server-modal-v2 .server-player-row{grid-template-columns:8px 31px minmax(0,1fr) auto;gap:8px;min-height:51px}.server-modal-v2 .server-player-avatar{width:29px;height:29px}.server-modal-v2 .server-player-row time{padding-left:8px;font-size:9px}.server-modal-footer-v2{padding:15px 17px 18px!important}.server-modal-footer-v2 .server-web-card{min-height:62px!important}}
 @media(prefers-reduced-motion:reduce){.server-loader-dot{animation:none}.server-modal-v2 *{transition:none!important}}
+
+
+/* Egyptian Edition — visual-only redesign, based on supplied concept art. */
+@media (min-width:901px){
+:root{--bg:#090807;--panel:#14100b;--panel2:#100d09;--line:#5d472a;--text:#f8eedc;--muted:#ae9a7a;--accent:#e4b96e;--sidebar:306px;--top:112px}
+html,body{background:#090807;color:#f7e9d0}
+.site{background:#080706}
+.topbar{height:var(--top)!important;grid-template-columns:306px minmax(0,1fr) auto!important;align-items:end!important;padding:0 14px 9px 0!important;background:linear-gradient(180deg,rgba(10,8,6,.04) 0,rgba(9,8,6,.35) 42%,#0b0907 72%),url('/egypt-header.webp') center top/cover no-repeat!important;border-bottom:1px solid #b48a4b!important;box-shadow:0 4px 20px #000b,0 1px 0 #f5c67c44!important}
+.topbar:before{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,transparent,#cba15c 18%,#5b3d1d 50%,#cba15c 83%,transparent);pointer-events:none}
+.brand{align-self:stretch;height:auto!important;padding:9px 18px 0!important;gap:14px!important;border-right:1px solid #8d6a38!important;background:linear-gradient(90deg,#080706ec,#100d09c9)!important}
+.brand-mark{width:68px!important;height:68px!important;transform:none!important;border:0!important;box-shadow:none!important;display:grid;place-items:center}
+.brand-mark img{width:64px!important;height:64px!important;object-fit:contain;filter:sepia(1) saturate(1.8) hue-rotate(345deg) brightness(1.25) drop-shadow(0 0 9px #cda35888)}
+.brand b{font-family:Georgia,'Times New Roman',serif!important;font-size:31px!important;letter-spacing:.14em!important;color:#f1c77e!important;text-shadow:0 2px 8px #000}
+.brand small{font-size:10px!important;letter-spacing:.28em!important;color:#e0b66f!important}
+.top-copy{color:#ebca91!important;letter-spacing:.14em!important;text-shadow:0 2px 6px #000}
+.auth-nav{height:46px;gap:7px!important;padding:0 0 0 8px!important;align-self:end}
+.auth-nav .ghost-button,.auth-nav .accent-button{border-color:#6b4d2c!important;background:linear-gradient(#1d160f,#100c08)!important;color:#ead5ae!important;box-shadow:inset 0 1px #c49a4830}
+.map-shell{top:var(--top)!important;inset:var(--top) 0 0!important;grid-template-columns:var(--sidebar) minmax(0,1fr)!important;background:#0b0907}
+.map-sidebar{margin:10px 0 10px 10px!important;padding:17px 14px!important;border:1px solid #97713d!important;border-radius:12px!important;background:linear-gradient(155deg,#221a11ee,#100d09f9 50%,#15100af8),url('/egypt-ornament.webp') left bottom/auto 300px no-repeat!important;box-shadow:inset 0 0 0 3px #0b0907,inset 0 0 0 4px #76562b88,0 8px 25px #000a!important}
+.side-title{font-size:16px!important;letter-spacing:.015em!important;text-transform:none!important;color:#f4e6cd!important;border-bottom:1px solid #72542e;padding:2px 3px 14px!important}
+.side-title button{color:#e4b96e!important;font-size:11px!important}
+.quick-filter{border-color:#9b743e!important;color:#f1d4a3!important;background:linear-gradient(180deg,#3b2b17,#1a140c)!important;box-shadow:inset 0 1px #f4cb7d35}
+.filter-section h3{color:#eac88d!important;font-size:11px!important;border-bottom:1px solid #4b3723;margin-top:14px!important}
+.filter-row{border-radius:6px!important;color:#e3d7c4!important;min-height:38px!important}
+.filter-row.active{background:linear-gradient(90deg,#674820a8,#251a0d99)!important;border-color:#a37c43!important;color:#ffe2a3!important}
+.filter-row:hover{background:#3a2919!important}
+.filter-row b{color:#d7b982!important}
+.map-main{margin:10px!important;border:1px solid #97713d!important;border-radius:12px!important;overflow:hidden!important;box-shadow:inset 0 0 0 2px #21170b,0 0 20px #0009!important}
+.map-main:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:500;border:4px double #8e672e77;border-radius:11px}
+.map-toolbar-overlay{top:14px!important;left:15px!important;right:15px!important}
+.map-search-field,.map-toolbar-overlay .add-marker-button,.coords-box,.map-zoom-controls button{background:linear-gradient(180deg,#22180feF,#0d0b08f5)!important;border:1px solid #9b743e!important;border-radius:6px!important;color:#f1d9a9!important;box-shadow:inset 0 1px #e8c08033,0 4px 12px #0009!important}
+.map-search-field input{color:#f9e8ca!important}
+.map-toolbar-overlay .add-marker-button{background:linear-gradient(180deg,#64451e,#2e1e0c)!important;color:#ffdf9d!important}
+.map-zoom-controls{z-index:710!important}
+.coords-box{z-index:710!important}.coords-box b{color:#ffd18b!important}
+.marker-detail{border:1px solid #ad8448!important;border-radius:12px!important;background:linear-gradient(155deg,#241b11f7,#0c0a07fc 65%)!important;box-shadow:inset 0 0 0 3px #0b0907,inset 0 0 0 4px #8a673e77,0 20px 60px #000d!important}
+.marker-detail h2{font-family:Georgia,'Times New Roman',serif!important;color:#f9dfaa!important}
+.marker-detail .kicker,.selected-marker-label{color:#e4b96e!important}
+.marker-detail button,.detail-tabs button{border-color:#71532f!important}
+.accent-button{background:linear-gradient(180deg,#9b713a,#4c3014)!important;border:1px solid #dfb46c!important;color:#fff0c8!important;box-shadow:inset 0 1px #ffe1a85c,0 4px 12px #0008!important}
+.marker-form,.auth-card,.auth-required-card,.discard-card{border:1px solid #9e7943!important;background:linear-gradient(160deg,#261c12,#100d09 65%)!important;box-shadow:inset 0 0 0 3px #100d09,inset 0 0 0 4px #74532e66,0 22px 70px #000a!important}
+}
+@media(max-width:900px){:root{--accent:#e4b96e;--line:#76552c;--bg:#100c08;--panel:#1d160e}.topbar,.map-sidebar,.marker-detail{border-color:#99733d!important}.filter-row.active,.accent-button{background:#5b401f!important;color:#ffe2a7!important}.map-toolbar-overlay .add-marker-button{border-color:#c79c56!important;color:#f1d6a1!important}}
