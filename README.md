@@ -133,3 +133,9 @@ Adds a searchable expandable Creature Spawn filter, per-creature marker counts, 
 
 ## V5.9 Community upgrade
 Run `scripts/community-v5.9-migration.sql` in Neon before deploying this version. It adds favorites, visited locations, community confirmations, comments, reports and notifications.
+
+## Ancient Sands design / Egyptský vzhled
+
+**CZ:** Rozhraní používá obsidiánové panely, tlumené zlaté akcenty a geometrický egyptský ornament. Vzhled zahrnuje mapu, filtry, formuláře, profil, administraci a serverový panel. Kalibrace souřadnic, obraz mapy, API a překlady zůstávají stejné. Nová vrstva vzhledu je v `app/ancient-sands.css`; ornament je v `public/ancient-frieze.svg`. Barvy původních panelů jsou sjednocené v `app/globals.css`. Nevyžaduje změny databáze ani nové proměnné prostředí. Instalace a nasazení probíhají jako dříve.
+
+**EN:** The interface uses obsidian panels, muted gold accents and a geometric Egyptian frieze. The design covers the map, filters, forms, profile, administration and server panel. Coordinate calibration, map image, APIs and translations are unchanged. The new theme layer is in `app/ancient-sands.css`; the ornament is in `public/ancient-frieze.svg`. Existing panel colors are unified in `app/globals.css`. No database migration or new environment variables are required. Installation and deployment follow the existing instructions.

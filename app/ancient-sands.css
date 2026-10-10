@@ -1,0 +1,49 @@
+/* Ancient Sands — obsidian, sandstone and brushed gold.
+   Presentation only: map calibration and resource colors stay in MapClient. */
+:root{--bg:#100f0c;--panel:#191713;--panel2:#13120f;--line:#393127;--text:#f4efe5;--muted:#b0a38e;--accent:#dab775;--cyan:#dab775;--gold:#dab775}
+body{background:var(--bg);color:var(--text)}
+button,a,input,select,textarea{transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #e6c485;outline-offset:3px}
+button:disabled{cursor:not-allowed;opacity:.5}
+.topbar{background:linear-gradient(100deg,#1c1913,#12120f 65%);border-bottom:1px solid #5a4830;box-shadow:0 4px 24px #0004}
+.brand{gap:18px;border-right-color:var(--line)}
+.brand b{font-family:Georgia,'Times New Roman',serif;font-size:25px;font-weight:600;letter-spacing:.16em;color:#f1dfba}
+.brand small{color:#bca078;letter-spacing:.22em;font-size:9px}
+.brand-mark{border:1px solid #b89557;background:#211c13;box-shadow:0 0 0 4px #b8955710,inset 0 0 16px #d3b07112}
+.brand-mark img{filter:sepia(.75) saturate(.65) drop-shadow(0 2px 4px #0008)}
+.top-copy{color:#b9a788;letter-spacing:.16em}
+.map-sidebar{background:linear-gradient(180deg,#1d1a15,#14130f 65%);border-right:1px solid #443827;padding:22px 16px;scrollbar-color:#75603d transparent}
+.map-sidebar:before{content:"";display:block;height:34px;margin:0 10px 20px;background:url('/ancient-frieze.svg') center/auto 32px repeat-x;opacity:.65;border-bottom:1px solid #b895572b;padding-bottom:10px}
+.side-title{color:#c9b99b;font-size:11px;letter-spacing:.15em}.side-title button{color:#b9a47f}
+.quick-filter{background:linear-gradient(110deg,#3c3020,#261f15);border:1px solid #8e6d3c;color:#f1dfb8;box-shadow:none;border-radius:6px;height:44px;margin:16px 0 22px}
+.quick-filter:hover{border-color:#dbb572;background:#443421}
+.filter-section h3{color:#d1bd97;border-bottom:1px solid #b8955725;font-size:11px;letter-spacing:.12em;margin:16px 0 8px;padding:10px 8px}
+.filter-row{height:46px;margin:3px 0;border-radius:6px;color:#b7ad9d;font-size:12px;transition:background .18s ease,color .18s ease}
+.filter-row.active{background:linear-gradient(90deg,#dab77519,#dab77505);border-color:#dab77524;color:#f4ead7;box-shadow:inset 2px 0 #c3a16a}
+.filter-row:hover{background:#dab77512;color:#fff3dc}.filter-row b{color:#bca680;background:#ffffff05;min-width:25px;padding:3px 6px;border-radius:4px;font-variant-numeric:tabular-nums}
+.filter-row .resource-icon{box-shadow:none}.filter-row:hover .resource-icon,.filter-row.active .resource-icon{box-shadow:none;transform:none}
+.sidebar-help{background:#252015;border-color:#73603d;color:#cbbb9e;font-weight:500;font-size:12px;box-shadow:none;text-shadow:none;line-height:1.7}
+.sidebar-help:before{color:#e0bd7c;border-color:#8f7348;background:#332818;box-shadow:none}
+.map-main,.leaflet-map,.leaflet-container.leaflet-map,.leaflet-container{background:#11120e!important}
+.map-toolbar-overlay{gap:10px}.map-search-field{background:#191812ed;border:1px solid #766143;border-radius:7px;box-shadow:0 5px 20px #0005;backdrop-filter:blur(16px)}
+.map-search-field input{color:#f0e6d4;font-size:13px}.map-search-field input::placeholder{color:#b6a98f}.map-search-field:focus-within{border-color:#e2be7b;box-shadow:0 0 0 3px #dab77515}
+.map-toolbar .add-marker-button,.accent-button,.form-actions .accent-button{background:linear-gradient(180deg,#ddbf84,#b39358);border:1px solid #e6c993;color:#211b10;text-shadow:none;box-shadow:0 4px 12px #0003;border-radius:6px;font-weight:800}
+.map-toolbar .add-marker-button:hover,.accent-button:hover{background:linear-gradient(180deg,#ecd09a,#c9a568);box-shadow:0 6px 18px #0004}
+.feedback-toolbar-button{background:#211d16;border-color:#7c6540;color:#e0c696;box-shadow:0 4px 12px #0003;border-radius:6px;letter-spacing:.04em}
+.feedback-toolbar-button:hover{background:#30271a;border-color:#d9b570;box-shadow:0 4px 12px #0003}
+.ghost-button,.language-button,.notif-button{background:#211f19;border-color:#504432;color:#e0d4bf;border-radius:6px;box-shadow:none}.ghost-button:hover,.language-button:hover{background:#30291f;border-color:#af8d57}
+.map-zoom-controls button{background:#1c1a14eb;border-color:#766143;color:#e4c995;box-shadow:none;border-radius:6px}
+.coords-box{background:#191711ed;border-color:#79613d;border-radius:6px;box-shadow:0 4px 18px #0005}.coords-box b{color:#e8c88e}.coords-box span{color:#b8a786;letter-spacing:.1em}
+.marker-detail,.marker-detail-v59,.marker-form,.marker-form-v51,.auth-card,.auth-required-card,.discard-card,.admin-editor,.confirm-card,.feedback-card,.server-modal,.server-modal-v2{background:linear-gradient(145deg,#242018,#14130f);border:1px solid #8b7046;box-shadow:0 24px 80px #0008;border-radius:12px;color:#f4ead8}
+.marker-detail h2,.marker-form h2,.auth-card h1,.feedback-card h2{font-family:Georgia,'Times New Roman',serif;font-weight:500;letter-spacing:.015em}
+.marker-detail p,.auth-card p,.marker-form p{color:#bcb09c}.kicker,.selected-marker-label{color:#dabb7e;letter-spacing:.14em}
+.coord-grid,.picked-position{background:#100f0b;border-color:#55442d}.coord-grid b{color:#ecd19f}
+.detail-tabs button.active,.admin-v2-tabs button.active{color:#f0d29a;background:#362b1b;border-color:#b89557;box-shadow:none}
+.marker-form input,.marker-form select,.marker-form textarea,.auth-card input,.feedback-card input,.feedback-card textarea{background:#13120f;border-color:#5b4c36;color:#f0e7d6}
+.server-modal:before,.server-hero-grid{display:none}.server-modal-v2 .server-modal-hero{background:radial-gradient(ellipse at top right,#ac864029,transparent 65%),#211c14}.server-modal-v2 .server-modal-hero:after{background:url('/ancient-frieze.svg') bottom/70px repeat;transform:none;height:100px;inset:auto 0 0;opacity:.08}
+.server-modal-footer-v2 .server-web-card{background:#342a1b!important;border-color:#9f814e!important;color:#ebd4ab}
+.tharat-loader{background:radial-gradient(ellipse at center,#392c16,#100f0c 65%)}.tharat-loader-grid{opacity:.05}.tharat-loader-title{font-family:Georgia,'Times New Roman',serif;letter-spacing:.2em;color:#efd5a2;text-shadow:none}.tharat-loader-diamond{box-shadow:none;border-color:#b89557}.tharat-loader-diamond img{filter:sepia(.75) saturate(.65)}
+.mobile-filter-toggle{background:#282116e8;color:#ebcd95;border-color:#9f814e;box-shadow:0 6px 20px #0005}
+@media(max-width:900px){.map-sidebar{background:#181610fa;padding:48px 16px 24px;border-top-color:#9f814e}.map-sidebar:before{height:24px;margin-bottom:15px}.brand b{font-size:21px;letter-spacing:.1em}}
+@media(max-width:650px){.map-toolbar-overlay{gap:6px}.map-search-field{min-width:0}.brand{gap:12px;padding-left:14px}.brand small{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

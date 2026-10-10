@@ -1,5 +1,6 @@
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
+import "./ancient-sands.css";
 import Providers from "@/components/Providers";
 
 export const metadata = {
