@@ -514,3 +514,19 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 
 /* Cloudflare Turnstile: keep the existing Tharat design */
 .human-check { margin: 14px 0; min-height: 65px; display: flex; justify-content: center; }
+
+
+/* THARAT maintenance mode */
+.maintenance-screen{min-height:100dvh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 20%,#123b52 0%,#081a2b 48%,#050d18 100%);color:#e9f6ff}
+.maintenance-card{width:min(100%,600px);text-align:center;padding:48px 32px;background:rgba(9,29,47,.88);border:1px solid rgba(58,202,219,.3);border-radius:22px;box-shadow:0 24px 100px #0007}
+.maintenance-card img{object-fit:contain;margin:auto auto 14px}
+.maintenance-kicker{letter-spacing:.23em;color:#38d6d2;font-size:12px;font-weight:700}
+.maintenance-icon{font-size:46px;margin:22px auto 10px}
+.maintenance-card h1{font-size:clamp(28px,5vw,40px);margin:0 0 16px;color:#f4fbff}
+.maintenance-card h2{font-size:18px;color:#c6f7f4;margin:18px 0 10px}
+.maintenance-card p{color:#a8c5d4;line-height:1.7}
+.maintenance-rule{height:1px;background:linear-gradient(90deg,transparent,#27617a,transparent);margin:28px 0}
+.maintenance-admin-link{display:inline-block;margin-top:28px;color:#48d8d4;text-decoration:none;font-size:13px}
+.maintenance-admin-link:hover{text-decoration:underline}
+.maintenance-switch{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px}
+.maintenance-status{font-weight:700;color:#38d6d2}
