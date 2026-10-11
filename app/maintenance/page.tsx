@@ -14,7 +14,7 @@ export default async function MaintenancePage() {
 
   return (
     <main className="tharat-maintenance" aria-label="Tharat Resource Map — web prochází údržbou">
-      <div className="tharat-maintenance__exact-scene" role="img" aria-label="Dinosaurus opravář, egyptská krajina a ozdobný panel s údržbou webu">
+      <div className="tharat-maintenance__clean-scene" role="img" aria-label="Dinosaurus opravář, egyptská krajina a ozdobný panel s údržbou webu">
         {status.endsAt && <MaintenanceCountdown endsAt={status.endsAt} />}
       </div>
       <h1 className="tharat-maintenance__sr-only">Web právě prochází údržbou / Website under maintenance</h1>

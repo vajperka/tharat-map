@@ -616,3 +616,61 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .tharat-maintenance-admin__error{background:#421b27;border:1px solid #a54662;color:#ffd1d8!important}
 .tharat-maintenance-admin__notice{background:#12382f;border:1px solid #2b876e;color:#b3f7d6!important}
 @media(max-width:620px){.tharat-maintenance-admin{margin:12px 0}.tharat-maintenance-admin__header{padding:20px;gap:12px}.tharat-maintenance-admin__icon{width:48px;height:48px;font-size:23px}.tharat-maintenance-admin__body{padding:18px;gap:17px}.tharat-maintenance-admin__status,.tharat-maintenance-admin__schedule{padding:17px}.tharat-maintenance-admin__date-row input{width:100%}.tharat-maintenance-admin__btn{width:100%}}
+
+
+/* THARAT countdown redesign: use the ORIGINAL art without baked-in AI countdown frames.
+   A single unified, crisp CSS panel avoids irregular frame edges and double numbers. */
+.tharat-maintenance__clean-scene {
+  position:absolute;top:50%;left:50%;
+  width:max(100vw,177.6833dvh);height:max(100dvh,56.2799vw);
+  transform:translate(-50%,-50%);
+  background:url('/tharat-maintenance-scene.webp') center/100% 100% no-repeat;
+  z-index:0;
+}
+.tharat-countdown-clean{
+  position:absolute;z-index:2;left:50%;bottom:3.2%;
+  transform:translateX(-50%);width:43%;max-width:780px;
+  padding:12px 24px 14px;
+  border:1px solid rgba(70,210,233,.65);
+  border-radius:12px;
+  background:linear-gradient(125deg,rgba(6,19,31,.95),rgba(10,35,48,.95));
+  box-shadow:0 12px 36px #000a,0 0 20px #09c9f323,inset 0 1px 0 #9fefff30;
+  text-align:center;
+  backdrop-filter:blur(12px);
+  color:#f7dfae;
+}
+.tharat-countdown-clean:before,.tharat-countdown-clean:after{
+  content:"";position:absolute;width:24px;height:24px;border-color:#4ee4fa;
+  pointer-events:none;filter:drop-shadow(0 0 5px #11d3fa);
+}
+.tharat-countdown-clean:before{top:-2px;left:-2px;border-top:2px solid;border-left:2px solid;border-top-left-radius:12px}
+.tharat-countdown-clean:after{bottom:-2px;right:-2px;border-bottom:2px solid;border-right:2px solid;border-bottom-right-radius:12px}
+.tharat-countdown-clean__heading{
+  font:700 clamp(8px,.68vw,13px)/1.4 system-ui,sans-serif;
+  color:#85eafa;letter-spacing:.11em;margin-bottom:7px;
+}
+.tharat-countdown-clean__heading span{opacity:.66;font-weight:500}
+.tharat-countdown-clean__values{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.tharat-countdown-clean__value{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.tharat-countdown-clean__value+ .tharat-countdown-clean__value{border-left:1px solid rgba(87,190,217,.3)}
+.tharat-countdown-clean__value strong{
+  color:#ffdfaa;font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(17px,2.8vw,52px);line-height:1.05;font-weight:700;
+  font-variant-numeric:tabular-nums;text-shadow:0 2px 12px #e89b4b4d;
+}
+.tharat-countdown-clean__value small{
+  color:#c1dce3;font:700 clamp(8px,.75vw,13px)/1.4 system-ui,sans-serif;
+  letter-spacing:.12em;
+}
+.tharat-countdown-clean__separator{display:none}
+@media(max-aspect-ratio:1672/941){
+  .tharat-countdown-clean__value strong{font-size:clamp(16px,4.7vh,52px)}
+  .tharat-countdown-clean__value small{font-size:clamp(8px,1.3vh,13px)}
+  .tharat-countdown-clean__heading{font-size:clamp(8px,1.2vh,13px)}
+}
+@media(max-width:700px){
+  .tharat-countdown-clean{width:66%;padding:7px 9px 9px;bottom:9%}
+  .tharat-countdown-clean__heading{font-size:7px;letter-spacing:0}
+  .tharat-countdown-clean__value strong{font-size:clamp(13px,3.4vw,24px)}
+  .tharat-countdown-clean__value small{font-size:7px;letter-spacing:0}
+}
