@@ -579,3 +579,40 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .tharat-maintenance__login:hover{transform:translateY(-2px)!important}
 @media(max-aspect-ratio:1672/941){.tharat-countdown-exact__unit strong{font-size:clamp(12px,6.2vh,64px)}.tharat-countdown-exact__unit small{font-size:clamp(7px,1.9vh,20px)}}
 @media(max-width:700px){.tharat-maintenance__login{right:12px!important;bottom:12px!important;font-size:10px!important}.tharat-maintenance__login-en{display:none}}
+
+/* Admin maintenance control — isolated from legacy admin-panel styles */
+.tharat-maintenance-admin{max-width:920px;margin:20px auto 28px;border:1px solid #1e485b;border-radius:18px;overflow:hidden;background:linear-gradient(150deg,#0d2234,#081622 75%);box-shadow:0 16px 60px #0005;color:#d7ecf5}
+.tharat-maintenance-admin__header{display:flex;align-items:center;gap:20px;padding:30px 34px;border-bottom:1px solid #1c4051;background:linear-gradient(110deg,#102f42,#0b1b2b)}
+.tharat-maintenance-admin__icon{width:64px;height:64px;flex:none;display:grid;place-items:center;font-size:29px;color:#6af4e5;background:#0b3543;border:1px solid #28798a;border-radius:15px;box-shadow:inset 0 0 24px #23e5e51a}
+.tharat-maintenance-admin__eyebrow{display:block;color:#50d7d0;font-size:11px;letter-spacing:.18em;font-weight:800;margin-bottom:7px}
+.tharat-maintenance-admin__header h2{margin:0!important;font-size:clamp(22px,3vw,30px)!important;color:#f4fbff!important;letter-spacing:0!important}
+.tharat-maintenance-admin__header p{margin:9px 0 0!important;color:#91b4c5!important;font-size:14px!important;line-height:1.5!important}
+.tharat-maintenance-admin__body{padding:28px 34px 34px;display:grid;gap:24px}
+.tharat-maintenance-admin__status{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;background:#071b29;border:1px solid #24495c;border-radius:13px;padding:20px 22px}
+.tharat-maintenance-admin__status-label{display:block;color:#789eb0;font-size:11px;font-weight:800;letter-spacing:.13em;margin-bottom:10px}
+.tharat-maintenance-admin__status strong{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:850;letter-spacing:.03em}
+.tharat-maintenance-admin__status .is-online{color:#68e5c0}.tharat-maintenance-admin__status .is-offline{color:#ffb18e}
+.tharat-maintenance-admin__dot{width:11px;height:11px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+.tharat-maintenance-admin__status-note{color:#8eacbd;font-size:13px;max-width:230px;line-height:1.6}
+.tharat-maintenance-admin__schedule{border:1px solid #204357;border-radius:13px;background:#0b2030;padding:22px}
+.tharat-maintenance-admin__schedule-heading{display:flex;align-items:center;gap:13px;margin-bottom:18px}
+.tharat-maintenance-admin__schedule-heading>span{font-size:28px;color:#64dcd6}
+.tharat-maintenance-admin__schedule-heading strong{display:block;font-size:16px;color:#edfaff}
+.tharat-maintenance-admin__schedule-heading small{display:block;color:#86adbf;font-size:12px;margin-top:5px}
+.tharat-maintenance-admin__date-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tharat-maintenance-admin__date-row input{width:min(100%,330px);min-width:0;min-height:48px;border:1px solid #36718a;border-radius:9px;background:#071724;color:#f0fbff;padding:10px 14px;font-size:15px;color-scheme:dark}
+.tharat-maintenance-admin__clear{border:1px solid #34586b;border-radius:9px;background:#112c3e;color:#a9d7e7;padding:12px 16px;font-size:13px;font-weight:700;cursor:pointer}
+.tharat-maintenance-admin__clear:disabled{opacity:.45;cursor:default}
+.tharat-maintenance-admin__schedule p{margin:14px 0 0!important;font-size:13px!important;color:#8eafc0!important;line-height:1.5!important}
+.tharat-maintenance-admin__planned{margin-top:15px;padding:12px 14px;border-radius:8px;background:#143342;color:#a5e7df;font-size:13px}
+.tharat-maintenance-admin__actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.tharat-maintenance-admin__btn{border:1px solid transparent;border-radius:10px;padding:14px 23px;min-height:49px;font-weight:850;font-size:12px;letter-spacing:.05em;cursor:pointer;transition:filter .15s,transform .15s}
+.tharat-maintenance-admin__btn:hover:not(:disabled){filter:brightness(1.13);transform:translateY(-1px)}
+.tharat-maintenance-admin__btn:disabled{opacity:.55;cursor:wait}
+.tharat-maintenance-admin__btn--red{background:#46232b;border-color:#aa5062;color:#ffd6dd}
+.tharat-maintenance-admin__btn--green{background:#11453f;border-color:#36a894;color:#baffeb}
+.tharat-maintenance-admin__btn--outline{background:#122e3e;border-color:#39758c;color:#bdefff}
+.tharat-maintenance-admin__error,.tharat-maintenance-admin__notice{margin:0!important;padding:13px 16px!important;border-radius:9px!important;font-size:13px!important;line-height:1.5!important}
+.tharat-maintenance-admin__error{background:#421b27;border:1px solid #a54662;color:#ffd1d8!important}
+.tharat-maintenance-admin__notice{background:#12382f;border:1px solid #2b876e;color:#b3f7d6!important}
+@media(max-width:620px){.tharat-maintenance-admin{margin:12px 0}.tharat-maintenance-admin__header{padding:20px;gap:12px}.tharat-maintenance-admin__icon{width:48px;height:48px;font-size:23px}.tharat-maintenance-admin__body{padding:18px;gap:17px}.tharat-maintenance-admin__status,.tharat-maintenance-admin__schedule{padding:17px}.tharat-maintenance-admin__date-row input{width:100%}.tharat-maintenance-admin__btn{width:100%}}
