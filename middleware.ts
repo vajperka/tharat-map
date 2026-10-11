@@ -14,8 +14,16 @@ export async function middleware(request: NextRequest) {
   const db = neon(url);
   let enabled = false;
   try {
-    const rows = await db`SELECT enabled FROM site_settings WHERE key='maintenance' LIMIT 1`;
-    enabled = rows[0]?.enabled === true;
+    let rows;
+    try {
+      rows = await db`SELECT enabled, ends_at FROM site_settings WHERE key='maintenance' LIMIT 1`;
+    } catch (error: unknown) {
+      if ((error as {code?:string})?.code !== '42703') throw error;
+      rows = await db`SELECT enabled FROM site_settings WHERE key='maintenance' LIMIT 1`;
+    }
+    const row = rows[0];
+    const end = row?.ends_at ? new Date(String(row.ends_at)).getTime() : null;
+    enabled = row?.enabled === true && (end === null || end > Date.now());
   } catch (error: any) {
     if (error?.code === "42P01") return NextResponse.next();
     // Database unavailable: prevent accidentally exposing the site during maintenance.
