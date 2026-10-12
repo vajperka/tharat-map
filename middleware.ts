@@ -5,7 +5,7 @@ import { neon } from "@neondatabase/serverless";
 // Check the shared DB setting on every request: switches take effect without redeploy.
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  if (pathname.startsWith("/api/admin/maintenance") || pathname.startsWith("/api/auth/") ||
+  if (pathname.startsWith("/api/admin/maintenance") || pathname === "/api/maintenance/status" || pathname.startsWith("/api/auth/") ||
       pathname === "/api/auth" || pathname.startsWith("/login") ||
       pathname.startsWith("/maintenance")) return NextResponse.next();
 
