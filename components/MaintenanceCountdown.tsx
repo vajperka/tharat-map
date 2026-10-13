@@ -21,9 +21,9 @@ export default function MaintenanceCountdown({ endsAt }: { endsAt: string }) {
   ] as const;
   return <section className="tharat-cinematic-timer" aria-label="Odpočet do konce údržby">
     {units?.map(([value, label], index) => (
-      <div className={`tharat-cinematic-timer__cell tharat-cinematic-timer__cell--${index}`} key={label}>
+      <div className={`tharat-cinematic-timer__cell tharat-cinematic-timer__cell--${index}`} key={label} aria-label={`${value} ${label}`}>
         <strong>{String(value).padStart(2, "0")}</strong>
-        <span>{label}</span>
+
       </div>
     ))}
   </section>;
