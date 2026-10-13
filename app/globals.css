@@ -690,7 +690,7 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
   aspect-ratio:1821 / 864;
   height:auto;
   transform:translate(-50%,-50%);
-  background:url('/tharat-maintenance-live.webp') center/100% 100% no-repeat;
+  background:url('/tharat-maintenance-clean-v5.webp') center/100% 100% no-repeat;
   container-type:inline-size;
 }
 .tharat-cinematic-timer {
