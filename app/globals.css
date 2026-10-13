@@ -677,3 +677,47 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
  .tharat-countdown-clean__value small{font-size:9px!important}
  .tharat-maintenance__login{right:10px!important;bottom:10px!important;font-size:10px!important}
 }
+
+/* Maintenance cinematic 2026: dedicated classes, no legacy timer overrides */
+.tharat-cinematic-maintenance{position:fixed;inset:0;overflow:hidden;background:#050c16;isolation:isolate}
+.tharat-cinematic-maintenance__art{
+  position:absolute;left:50%;top:50%;
+  width:max(100vw,210.7639dvh);
+  height:max(100dvh,47.4465vw);
+  transform:translate(-50%,-50%);
+  background:url('/tharat-maintenance-live.webp') center/100% 100% no-repeat;
+  container-type:inline-size;
+}
+.tharat-cinematic-timer{position:absolute;inset:0;pointer-events:none;z-index:1}
+.tharat-cinematic-timer__cell{
+  position:absolute;top:78.75%;height:9.15%;width:7.75%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:.1cqw;text-align:center;color:#ffdda5;
+  font-family:Georgia,'Times New Roman',serif;
+}
+.tharat-cinematic-timer__cell--0{left:31.1%}
+.tharat-cinematic-timer__cell--1{left:39.8%}
+.tharat-cinematic-timer__cell--2{left:48.6%}
+.tharat-cinematic-timer__cell--3{left:57.6%}
+.tharat-cinematic-timer__cell strong{
+  display:block;color:#ffdea8;
+  font-size:3.0cqw;line-height:1;font-weight:700;
+  font-variant-numeric:tabular-nums;
+  text-shadow:0 .12cqw .4cqw rgba(255,163,66,.35);
+}
+.tharat-cinematic-timer__cell span{
+  display:block;color:#f7dcae;font-size:1.06cqw;line-height:1.1;font-weight:700;
+  white-space:nowrap;
+}
+.tharat-cinematic-maintenance__login{
+  position:fixed;right:16px;bottom:14px;z-index:5;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid #3aa4b7;border-radius:9px;
+  background:rgba(4,17,27,.9);color:#d2f6ff;text-decoration:none;
+  padding:10px 14px;font:700 12px/1.4 system-ui,sans-serif;
+  box-shadow:0 0 18px #00baff30;backdrop-filter:blur(9px);
+}
+.tharat-cinematic-maintenance__login:hover{background:#103446;border-color:#8ceeff}
+@media(max-width:640px){
+ .tharat-cinematic-maintenance__login{right:8px;bottom:8px;padding:8px 10px;font-size:10px}
+}
