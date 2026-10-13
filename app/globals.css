@@ -678,46 +678,66 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
  .tharat-maintenance__login{right:10px!important;bottom:10px!important;font-size:10px!important}
 }
 
-/* Maintenance cinematic 2026: dedicated classes, no legacy timer overrides */
-.tharat-cinematic-maintenance{position:fixed;inset:0;overflow:hidden;background:#050c16;isolation:isolate}
-.tharat-cinematic-maintenance__art{
-  position:absolute;left:50%;top:50%;
+/* THARAT cinematic maintenance — single seamless timer surface.
+   All geometry is in percentages of the 1821x864 source image, so it
+   stays registered to the ornamental frame at every viewport ratio. */
+.tharat-cinematic-maintenance {
+  position:fixed; inset:0; overflow:hidden; isolation:isolate; background:#050c16;
+}
+.tharat-cinematic-maintenance__art {
+  position:absolute; top:50%; left:50%;
   width:max(100vw,210.7639dvh);
-  height:max(100dvh,47.4465vw);
+  aspect-ratio:1821 / 864;
+  height:auto;
   transform:translate(-50%,-50%);
   background:url('/tharat-maintenance-live.webp') center/100% 100% no-repeat;
   container-type:inline-size;
 }
-.tharat-cinematic-timer{position:absolute;inset:0;pointer-events:none;z-index:1}
-.tharat-cinematic-timer__cell{
-  position:absolute;top:78.75%;height:9.15%;width:7.75%;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:.1cqw;text-align:center;color:#ffdda5;
-  font-family:Georgia,'Times New Roman',serif;
+.tharat-cinematic-timer {
+  position:absolute; inset:0; z-index:1; pointer-events:none;
 }
-.tharat-cinematic-timer__cell--0{left:31.1%}
-.tharat-cinematic-timer__cell--1{left:39.8%}
-.tharat-cinematic-timer__cell--2{left:48.6%}
-.tharat-cinematic-timer__cell--3{left:57.6%}
-.tharat-cinematic-timer__cell strong{
-  display:block;color:#ffdea8;
-  font-size:3.0cqw;line-height:1;font-weight:700;
-  font-variant-numeric:tabular-nums;
-  text-shadow:0 .12cqw .4cqw rgba(255,163,66,.35);
+/* Cover the old baked-in digits, labels and uneven rectangles with ONE
+   continuous dark surface inside the existing ornate image border. */
+.tharat-cinematic-timer::before {
+  content:""; position:absolute;
+  left:30.75%; top:78.35%; width:35.2%; height:12.3%;
+  clip-path:polygon(0 0,100% 0,100% 100%,54% 100%,54% 78%,46% 78%,46% 100%,0 100%);
+  background:linear-gradient(180deg,#05101b 0%,#061420 62%,#071522 100%);
+  box-shadow:inset 0 0 12px rgba(7,29,46,.25);
 }
-.tharat-cinematic-timer__cell span{
-  display:block;color:#f7dcae;font-size:1.06cqw;line-height:1.1;font-weight:700;
-  white-space:nowrap;
+.tharat-cinematic-timer__cell {
+  position:absolute; top:78.75%; height:9.1%; width:8.15%;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  gap:.22cqw; text-align:center; font-family:Georgia,'Times New Roman',serif;
+  color:#ffdda5;
 }
-.tharat-cinematic-maintenance__login{
-  position:fixed;right:16px;bottom:14px;z-index:5;
-  display:inline-flex;align-items:center;justify-content:center;
-  border:1px solid #3aa4b7;border-radius:9px;
-  background:rgba(4,17,27,.9);color:#d2f6ff;text-decoration:none;
-  padding:10px 14px;font:700 12px/1.4 system-ui,sans-serif;
-  box-shadow:0 0 18px #00baff30;backdrop-filter:blur(9px);
+.tharat-cinematic-timer__cell--0 {left:30.65%}
+.tharat-cinematic-timer__cell--1 {left:39.5%}
+.tharat-cinematic-timer__cell--2 {left:48.35%}
+.tharat-cinematic-timer__cell--3 {left:57.2%}
+.tharat-cinematic-timer__cell:not(:first-child)::before {
+  content:""; position:absolute; left:0; top:16%; bottom:16%; width:1px;
+  background:linear-gradient(180deg,transparent,#1c88bc 50%,transparent);
+  box-shadow:0 0 5px #00b9ee80;
 }
-.tharat-cinematic-maintenance__login:hover{background:#103446;border-color:#8ceeff}
-@media(max-width:640px){
- .tharat-cinematic-maintenance__login{right:8px;bottom:8px;padding:8px 10px;font-size:10px}
+.tharat-cinematic-timer__cell strong {
+  display:block; font-size:2.65cqw; line-height:1; font-weight:700;
+  color:#ffdea8; font-variant-numeric:tabular-nums;
+  text-shadow:0 .1cqw .3cqw rgba(255,163,66,.4);
+}
+.tharat-cinematic-timer__cell span {
+  display:block; font-size:1.04cqw; line-height:1.15; font-weight:700;
+  color:#f7dcae; white-space:nowrap;
+}
+.tharat-cinematic-maintenance__login {
+  position:fixed; right:16px; bottom:14px; z-index:5;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid #3aa4b7; border-radius:9px;
+  background:rgba(4,17,27,.9); color:#d2f6ff; text-decoration:none;
+  padding:10px 14px; font:700 12px/1.4 system-ui,sans-serif;
+  box-shadow:0 0 18px #00baff30; backdrop-filter:blur(9px);
+}
+.tharat-cinematic-maintenance__login:hover {background:#103446; border-color:#8ceeff}
+@media(max-width:640px) {
+  .tharat-cinematic-maintenance__login {right:8px;bottom:8px;padding:8px 10px;font-size:10px}
 }
