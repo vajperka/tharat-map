@@ -212,7 +212,7 @@ export default function MapClient({user}:{user:any}){
    <div className="kicker">{language==="cs"?"OFICIÁLNÍ SKEN SERVERU":"OFFICIAL SERVER SCAN"}</div>
    <h2>{selectedOfficial.k==="dino"?selectedOfficial.tag:selectedOfficial.k==="oil"?(language==="cs"?"Ropná žíla":"Oil vein"):selectedOfficial.k==="artifact"?(language==="cs"?"Artefakt":"Artifact"):selectedOfficial.k==="volume"?(language==="cs"?"Oblast spawnu beden":"Crate spawn area"):(language==="cs"?"Loot bedna":"Loot crate")}</h2>
    <div className="picked-position"><label><span>LATITUDE</span><b>{selectedOfficial.lat.toFixed(2)}</b></label><label><span>LONGITUDE</span><b>{selectedOfficial.lon.toFixed(2)}</b></label></div>
-   <div className="detail-tabs"><button className="active">{t("detail.information")}</button></div>
+   <div className="detail-tabs"><button className="active">{t("detail.info")}</button></div>
    <p>{selectedOfficial.name}</p>{selectedOfficial.level&&<p>{language==="cs"?"Úroveň":"Level"}: {selectedOfficial.level}</p>}
    <p className="official-scan-hint">{language==="cs"?"Souřadnice pocházejí z jednorázového skenu serveru. Nejde o potvrzené trvalé místo výskytu.":"Coordinates come from a one-time server scan. This is not a confirmed permanent spawn location."}</p>
    <div className="marker-actions"><button onClick={()=>{navigator.clipboard?.writeText(`${location.origin}${location.pathname}?lat=${selectedOfficial.lat}&lon=${selectedOfficial.lon}`);showSuccess(language==="cs"?"Souřadnice zkopírovány":"Coordinates copied")}}>↗ {t("detail.share")}</button></div>
