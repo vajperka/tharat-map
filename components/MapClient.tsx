@@ -124,17 +124,18 @@ export default function MapClient({user}:{user:any}){
     ctx.restore();
    }
   });
-  // One cached SVG per category; no per-marker image downloads.
+  // Browser-safe raster icons. The inline SVG snippets used by the filter lack
+  // xmlns and fail to decode as standalone images in Canvas in some browsers.
+  // Use actual PNG assets and redraw each category after loading.
   for(const kind of ["creature","oilvein","artifact","loot","cratevolume"]){
-   const svg=ICONS[kind]||ICONS.loot;
    const img=new Image();
-   img.onload=()=>{
-    // Leaflet Canvas has no reliable public _redraw() method. Each circle
-    // must request its own redraw once its SVG has decoded.
-    if(map.hasLayer(group))group.eachLayer((layer:any)=>{if(layer.options?.officialKind===kind)layer.redraw()});
-   };
-   img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
    images[kind]=img;
+   img.onload=()=>{
+    if(map.hasLayer(group))group.eachLayer((layer:any)=>{
+     if(layer.options?.officialKind===kind)layer.redraw();
+    });
+   };
+   img.src=`/official-icons/${kind}.png`;
   }
   for(const x of officialVisible){
    const [y,xx]=gameToImage(x.lat,x.lon);
