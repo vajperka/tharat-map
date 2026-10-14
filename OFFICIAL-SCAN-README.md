@@ -1,11 +1,7 @@
-# Official Tharat scan / Oficiální sken
+# Import dat přímo do hlavní mapy / Native map import
 
-Data z adminova jednorázového logu jsou v `public/official-tharat-locations.json`.
+Souřadnice z jednorázového skenu serveru se nyní vykreslují přímo na hlavní mapě bez samostatného přepínače. Používají stávající kategorie (Dinosauři, Ropné žíly, Artefakty, Loot) a novou kategorii Oblasti spawnu beden. Detail se otevírá kliknutím na bod a vzhled využívá existující detail panel.
 
-Zapnutí: na mapě vlevo sekce OFICIÁLNÍ SKEN MAPY, zapnout a vybrat kategorii; u dinosaurů také konkrétní druh.
+Data zůstávají v `public/official-tharat-locations.json`, nedochází k zápisu do databáze ani k vydávání skenu za komunitní, adminem ověřené markery. Sken obsahuje dynamické polohy tvorů, nikoli zaručené spawny. Použita stávající kalibrace LAT/LON.
 
-Nejde o trvalé spawn lokace; jde o pozice entit v okamžiku skenu. Souřadnice zůstávají v GPS LAT/LON a pro vykreslení se používá stávající kalibrace webu.
-
-Žádné databázové migrace, žádný zásah do schvalování komunitních markerů.
-
-EN: Server snapshot overlay, separated from user markers. No DB migration required.
+EN: One-time server scan rendered in native map filters and detail layout; no separate scan toggle, no DB migration.
