@@ -128,7 +128,11 @@ export default function MapClient({user}:{user:any}){
   for(const kind of ["creature","oilvein","artifact","loot","cratevolume"]){
    const svg=ICONS[kind]||ICONS.loot;
    const img=new Image();
-   img.onload=()=>{if(map.hasLayer(group))canvas._redraw?.()};
+   img.onload=()=>{
+    // Leaflet Canvas has no reliable public _redraw() method. Each circle
+    // must request its own redraw once its SVG has decoded.
+    if(map.hasLayer(group))group.eachLayer((layer:any)=>{if(layer.options?.officialKind===kind)layer.redraw()});
+   };
    img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
    images[kind]=img;
   }
