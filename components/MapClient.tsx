@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import type { Marker } from "@/lib/types";
 import { useLanguage } from "./LanguageProvider";
 
-const TYPES:any={resources:[["metal","Metal","⛏","#aeb8c5"],["crystal","Crystal","◆","#70d7ff"],["obsidian","Obsidian","⬟","#a86cff"],["oil","Oil","●","#d8943f"],["oilvein","Oil Vein","⛽","#ff9e3d"],["sulfur","Sulfur","●","#f0d84f"],["silica","Silica Pearls","◉","#a7e9ff"],["blackpearls","Black Pearls","◉","#8c62d8"],["element","Element Dust","✦","#27e1c1"],["redingot","Red Ingot","▰","#ff4d5d"],["diamondingot","Diamond Ingot","▰","#58e7ff"],["goldingot","Gold Ingot","▰","#ffc83d"]],locations:[["cave","Caves","⌂","#9da9b8"],["artifact","Artifacts","◇","#b05cff"],["loot","Loot","▣","#58a6ff"],["cratevolume","Crate spawn areas","▣","#40c9e9"],["creature","Creature Spawn","◌","#ef7fce"]]};
+const TYPES:any={resources:[["metal","Metal","⛏","#aeb8c5"],["crystal","Crystal","◆","#70d7ff"],["obsidian","Obsidian","⬟","#a86cff"],["oil","Oil","●","#d8943f"],["oilvein","Oil Vein","⛽","#ff9e3d"],["sulfur","Sulfur","●","#f0d84f"],["silica","Silica Pearls","◉","#a7e9ff"],["blackpearls","Black Pearls","◉","#8c62d8"],["element","Element Dust","✦","#27e1c1"],["redingot","Red Ingot","▰","#ff4d5d"],["diamondingot","Diamond Ingot","▰","#58e7ff"],["goldingot","Gold Ingot","▰","#ffc83d"]],locations:[["cave","Caves","⌂","#9da9b8"],["artifact","Artifacts","◇","#b05cff"],["loot","Loot","▣","#58a6ff"],["cratevolume","Loot crate spawn areas","▣","#40c9e9"],["creature","Creature Spawn","◌","#ef7fce"]]};
 
 const ICONS:Record<string,string>={
  metal:`<svg viewBox="0 0 48 48"><path fill="#b9c4cf" d="M8 31 15 15l11-5 7 8 8 5-5 15H17z"/><path fill="#6f7f8e" d="m8 31 13-7 15 14H17z"/><path fill="#eef4f8" d="m15 15 11-5-5 14-13 7z"/></svg>`,
