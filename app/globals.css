@@ -713,3 +713,6 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 }
 .tharat-cinematic-maintenance__login:hover{background:#103446;border-color:#8ceeff}
 @media(max-width:640px){.tharat-cinematic-maintenance__login{right:8px;bottom:8px;padding:8px 10px;font-size:10px}}
+
+/* Official Tharat server scan overlay */
+.official-scan-section{padding-bottom:16px}.official-scan-toggle{display:flex;align-items:center;gap:10px;color:#e4f6f8;font-size:13px;cursor:pointer;padding:8px 4px}.official-scan-toggle input{accent-color:#36cbbb;width:17px;height:17px}.official-scan-hint{font-size:11px;line-height:1.5;color:#8caeb9;margin:4px 4px 10px}.official-scan-select{width:100%;min-width:0;box-sizing:border-box;margin:5px 0;padding:9px 10px;background:#0a1c29;border:1px solid #315166;border-radius:7px;color:#e5f4f5}.official-scan-count{display:block;color:#64dbd0;margin:8px 4px}
