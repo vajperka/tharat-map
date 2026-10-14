@@ -28,6 +28,7 @@ const ICONS:Record<string,string>={
  cave:`<svg viewBox="0 0 48 48"><path fill="#9ba7b2" d="M5 40C7 19 14 8 24 8s17 11 19 32H31c0-12-3-19-7-19s-7 7-7 19z"/><path fill="#e1e7eb" d="M10 35c3-15 8-23 14-23 4 0 8 4 11 12-4-5-7-7-11-7-6 0-10 7-12 18z"/></svg>`,
  artifact:`<svg viewBox="0 0 48 48"><path fill="#a738ff" d="M24 5 43 38H5z"/><path fill="#e6a6ff" d="M24 12 35 33H13z"/><path fill="#3b1268" d="M24 18 30 31H18z"/><circle cx="24" cy="28" r="4" fill="#8b35ff"/></svg>`,
  boss:`<svg viewBox="0 0 48 48"><path fill="#e8443c" d="M8 27c0-12 7-20 16-20s16 8 16 20c0 8-5 14-10 14H18C13 41 8 35 8 27z"/><circle cx="18" cy="25" r="4" fill="#111"/><circle cx="30" cy="25" r="4" fill="#111"/><path fill="#111" d="m17 37 3-7 4 6 4-6 3 7z"/><path fill="#ff8277" d="M11 20c3-7 7-10 13-10-5 4-8 8-9 14z"/></svg>`,
+ cratevolume:`<svg viewBox="0 0 48 48"><path fill="#176e94" d="M6 17h36v26H6z"/><path fill="#54d7f3" d="M8 9h32l2 11H6z"/><path fill="#0a3a56" d="M20 9h8v34h-8z"/><rect x="19" y="25" width="10" height="9" rx="2" fill="#b9f5ff"/></svg>`,
  loot:`<svg viewBox="0 0 48 48"><path fill="#c57a20" d="M6 18h36v24H6z"/><path fill="#f0ad39" d="M8 10h32l2 12H6z"/><path fill="#714017" d="M21 10h6v32h-6z"/><rect x="19" y="25" width="10" height="9" rx="2" fill="#35b9ff"/></svg>`,
  base:`<svg viewBox="0 0 48 48"><path fill="#dc7c52" d="m5 23 19-17 19 17-5 5-14-12-14 12z"/><path fill="#e7ded2" d="M11 24 24 13l13 11v18H11z"/><path fill="#5f3429" d="M20 29h8v13h-8z"/><path fill="#71d7ff" d="M14 27h5v6h-5zM30 27h5v6h-5z"/></svg>`,
  creature:`<svg viewBox="0 0 48 48"><circle cx="24" cy="30" r="10" fill="#ef4d48"/><ellipse cx="11" cy="20" rx="5" ry="7" fill="#ff746d"/><ellipse cx="20" cy="12" rx="5" ry="7" fill="#ff746d"/><ellipse cx="29" cy="12" rx="5" ry="7" fill="#ff746d"/><ellipse cx="38" cy="20" rx="5" ry="7" fill="#ff746d"/></svg>`
@@ -98,14 +99,52 @@ export default function MapClient({user}:{user:any}){
  const officialKinds:Record<string,string>={dino:"creature",oil:"oilvein",artifact:"artifact",crate:"loot",volume:"cratevolume"};
  const officialSpeciesList=useMemo(()=>[...new Set(official.filter(x=>x.k==="dino").map(x=>x.tag))].sort(),[official]);
  const officialVisible=useMemo(()=>official.filter(x=>enabled.has(officialKinds[x.k]) && (x.k!=="dino"||selectedCreatures.size===0||(selectedCreatures.has(x.tag)||selectedCreatures.has(x.tag.toLowerCase().replace(/[^a-z0-9]+/g,"-")))) && (!query||`${x.tag} ${x.name} ${x.lat} ${x.lon}`.toLowerCase().includes(query.toLowerCase()))),[official,enabled,selectedCreatures,query]);
- // Canvas renderer handles thousands of server-snapshot points without thousands of DOM nodes.
- useEffect(()=>{const L=leaflet.current,map=mapRef.current;if(!L||!map)return;
-  officialLayers.current.forEach(x=>map.removeLayer(x));officialLayers.current=[];
-  const canvas=L.canvas({padding:.2});const group=L.layerGroup();
-  for(const x of officialVisible){const [y,xx]=gameToImage(x.lat,x.lon);const color=x.k==="dino"?"#ef7fce":x.k==="oil"?"#ff9e3d":x.k==="artifact"?"#b05cff":"#58a6ff";
-   const point=L.circleMarker([100-y,xx*MAP_ASPECT],{renderer:canvas,radius:5,weight:1.4,color,fillColor:color,fillOpacity:.65});
-   point.on("click",()=>{if(modeRef.current==="idle"){setSelected(null);setSelectedOfficial(x)}});group.addLayer(point);
-  }group.addTo(map);officialLayers.current=[group];
+ // Render official points with the same category icons as community markers.
+ // Canvas keeps thousands of locations performant (no thousands of HTML elements).
+ useEffect(()=>{
+  const L=leaflet.current,map=mapRef.current;
+  if(!L||!map)return;
+  officialLayers.current.forEach(layer=>map.removeLayer(layer));officialLayers.current=[];
+  const canvas=L.canvas({padding:.2});
+  const group=L.layerGroup();
+  const kinds:Record<string,string>={dino:"creature",oil:"oilvein",artifact:"artifact",crate:"loot",volume:"cratevolume"};
+  const images:Record<string,HTMLImageElement>={};
+  const OfficialIcon=L.CircleMarker.extend({
+   _updatePath:function(this:any){
+    if(!this._renderer)return;
+    this._renderer._updateCircle(this);
+    const ctx=this._renderer._ctx as CanvasRenderingContext2D|undefined;
+    if(!ctx||!this._point)return;
+    const key=this.options.officialKind as string;
+    const img=images[key];
+    if(!img?.complete||!img.naturalWidth)return;
+    const r=this.options.radius;
+    ctx.save();
+    ctx.drawImage(img,this._point.x-r*.72,this._point.y-r*.72,r*1.44,r*1.44);
+    ctx.restore();
+   }
+  });
+  // One cached SVG per category; no per-marker image downloads.
+  for(const kind of ["creature","oilvein","artifact","loot","cratevolume"]){
+   const svg=ICONS[kind]||ICONS.loot;
+   const img=new Image();
+   img.onload=()=>{if(map.hasLayer(group))canvas._redraw?.()};
+   img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+   images[kind]=img;
+  }
+  for(const x of officialVisible){
+   const [y,xx]=gameToImage(x.lat,x.lon);
+   const kind=kinds[x.k]||"loot";
+   const color=TYPE_MAP[kind]?.color||"#58a6ff";
+   const point=new OfficialIcon([100-y,xx*MAP_ASPECT],{
+    renderer:canvas,officialKind:kind,radius:10.5,weight:1.6,
+    color,fillColor:"#071624",fillOpacity:.95,opacity:.95
+   });
+   point.on("click",()=>{if(modeRef.current==="idle"){setSelected(null);setSelectedOfficial(x)}});
+   group.addLayer(point);
+  }
+  group.addTo(map);officialLayers.current=[group];
+  return ()=>{if(map.hasLayer(group))map.removeLayer(group)};
  },[officialVisible]);
  const [toastLeaving,setToastLeaving]=useState(false);
  const [creatures,setCreatures]=useState<Creature[]>([]),[resources,setResources]=useState<Resource[]>([]),[creatureOpen,setCreatureOpen]=useState(false),[creatureSearch,setCreatureSearch]=useState("");
