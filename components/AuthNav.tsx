@@ -14,6 +14,7 @@ export default function AuthNav({user}:{user:any}){
  const staffButton=useRef<HTMLButtonElement>(null);
  const notifButton=useRef<HTMLButtonElement>(null);
  useEffect(()=>setPortalReady(true),[]);
+ const[profile,setProfile]=useState<any>(null),[notifs,setNotifs]=useState<any>({items:[],unread:0}),[open,setOpen]=useState(false),[filter,setFilter]=useState<"all"|"unread">("all"),[serverStatus,setServerStatus]=useState<any>(null),[staff,setStaff]=useState<any[]>([]),[staffOpen,setStaffOpen]=useState(false),[serverOpen,setServerOpen]=useState(false);
  useEffect(()=>{
    if(!staffOpen&&!open)return;
    const update=()=>{
@@ -30,7 +31,7 @@ export default function AuthNav({user}:{user:any}){
    window.addEventListener('resize',update);
    window.addEventListener('scroll',update,true);
    return()=>{window.removeEventListener('resize',update);window.removeEventListener('scroll',update,true)};
- },[staffOpen,open]); const[profile,setProfile]=useState<any>(null),[notifs,setNotifs]=useState<any>({items:[],unread:0}),[open,setOpen]=useState(false),[filter,setFilter]=useState<"all"|"unread">("all"),[serverStatus,setServerStatus]=useState<any>(null),[staff,setStaff]=useState<any[]>([]),[staffOpen,setStaffOpen]=useState(false),[serverOpen,setServerOpen]=useState(false);
+ },[staffOpen,open]);
  const load=()=>user&&fetch('/api/notifications',{cache:'no-store'}).then(r=>r.json()).then(setNotifs).catch(()=>{});
  useEffect(()=>{load();if(!user)return;const timer=setInterval(load,30000);return()=>clearInterval(timer)},[user]);
  useEffect(()=>{let live=true;const refresh=()=>fetch('/api/server-status').then(r=>r.json()).then(d=>{if(live)setServerStatus(d)}).catch(()=>{});refresh();const timer=setInterval(refresh,60000);return()=>{live=false;clearInterval(timer)}},[]);
