@@ -1,3 +1,4 @@
+import VisitorAnalytics from "@/components/VisitorAnalytics";
 import { auth } from "@/auth";
 import AuthNav from "@/components/AuthNav";
 import MapClient from "@/components/MapClient";
@@ -15,6 +16,7 @@ export default async function Home() {
       </header>
       <MapClient user={session?.user || null} />
       <TharatAssistant />
+      <VisitorAnalytics />
     </main>
   );
 }
