@@ -13,10 +13,13 @@ try{
  COUNT(DISTINCT session_hash) FILTER (WHERE visited_at>=now()-interval '30 days')::int unique30
  FROM visitor_pageviews`;
  visits=totals;
- daily=await db`SELECT to_char(day,'YYYY-MM-DD') day, COALESCE(count(v.id),0)::int visits,
- COUNT(DISTINCT v.session_hash)::int unique_visitors
- FROM generate_series(current_date-13,current_date,interval '1 day') day
- LEFT JOIN visitor_pageviews v ON v.visited_at>=day AND v.visited_at<day+interval '1 day'
- GROUP BY day ORDER BY day`;
+ daily=await db`SELECT to_char(CURRENT_DATE - (13 - series.n), 'YYYY-MM-DD') AS day,
+ COUNT(v.id)::int AS visits,
+ COUNT(DISTINCT v.session_hash)::int AS unique_visitors
+ FROM generate_series(0, 13) AS series(n)
+ LEFT JOIN visitor_pageviews AS v
+ ON v.visited_at >= (CURRENT_DATE - (13 - series.n))
+ AND v.visited_at < (CURRENT_DATE - (12 - series.n))
+ GROUP BY series.n ORDER BY series.n`;
 }catch(e:any){console.error("Visitor analytics stats failed",e);analyticsError="Návštěvnost není dostupná: "+(e?.message||"Database error");}
 return NextResponse.json({stats:s,activity,top,types,visits,daily,analyticsError})}
