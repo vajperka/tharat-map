@@ -177,6 +177,27 @@ export default function MapClient({user}:{user:any}){
  async function addComment(){if(!user){setMode("auth");return}if(!selected||!commentText.trim())return;const r=await fetch(`/api/markers/${selected.id}/comments`,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({body:commentText,parentId:replyTo?.id||null})});if(r.ok){setCommentText("");setReplyTo(null);await refreshComments()}}
  async function saveComment(c:any){if(!selected||!editingComment?.body?.trim())return;const r=await fetch(`/api/markers/${selected.id}/comments`,{method:"PATCH",headers:{"content-type":"application/json"},body:JSON.stringify({commentId:c.id,body:editingComment.body})});if(r.ok){setEditingComment(null);await refreshComments()}}
  async function deleteComment(c:any){if(!selected||!confirm(t("comments.deleteConfirm")))return;const r=await fetch(`/api/markers/${selected.id}/comments`,{method:"DELETE",headers:{"content-type":"application/json"},body:JSON.stringify({commentId:c.id})});if(r.ok)await refreshComments()}
+ useEffect(()=>{
+  const show=(event:Event)=>{
+   const items=(event as CustomEvent<{points:{lat:number;lon:number}[]}>).detail?.points||[];
+   const L=leaflet.current,map=mapRef.current;
+   if(!L||!map)return;
+   const existing=(map as any)._tharatAssistantLayer;
+   if(existing)map.removeLayer(existing);
+   const layer=L.layerGroup().addTo(map);
+   (map as any)._tharatAssistantLayer=layer;
+   items.forEach(p=>{if(!Number.isFinite(p.lat)||!Number.isFinite(p.lon))return;
+    L.circleMarker([100-gameToImage(p.lat,p.lon)[0],lonToX(p.lon,p.lat)],{radius:14,color:"#66f5e3",weight:3,fillColor:"#0a4255",fillOpacity:.35,interactive:false}).addTo(layer);
+   });
+   if(items.length){const p=items[0];map.setView([100-gameToImage(p.lat,p.lon)[0],lonToX(p.lon,p.lat)],Math.max(map.getZoom(),2),{animate:true})}
+  };
+  const focus=(event:Event)=>{const p=(event as CustomEvent<{lat:number;lon:number}>).detail;if(!p)return;
+   mapRef.current?.setView([100-gameToImage(p.lat,p.lon)[0],lonToX(p.lon,p.lat)],4,{animate:true});
+  };
+  window.addEventListener("tharat-assistant-locations",show);
+  window.addEventListener("tharat-assistant-focus",focus);
+  return()=>{window.removeEventListener("tharat-assistant-locations",show);window.removeEventListener("tharat-assistant-focus",focus)};
+ },[]);
  function runSearch(){const m=query.trim().match(/^(?:lat\s*)?(\d+(?:[.,]\d+)?)\s*[,;/ ]\s*(?:lon\s*)?(\d+(?:[.,]\d+)?)$/i);if(!m)return;const lat=Number(m[1].replace(",",".")),lon=Number(m[2].replace(",","."));if(lat<0||lat>100||lon<0||lon>100)return;mapRef.current?.setView([100-gameToImage(lat,lon)[0],lonToX(lon,lat)],2,{animate:true});showTemp(lat,lon);setCoords({lat:lat.toFixed(2),lon:lon.toFixed(2)})}
  function shareMarker(){if(!selected)return;const url=`${location.origin}${location.pathname}?marker=${selected.id}`;navigator.clipboard?.writeText(url);showSuccess("Odkaz na lokaci byl zkopírován.")}
 

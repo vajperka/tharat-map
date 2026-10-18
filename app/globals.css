@@ -725,3 +725,19 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
  .tharat-mobile-popup{max-width:calc(100vw - 16px)!important;min-width:0!important}
  .staff-online-menu.tharat-mobile-popup,.notif-menu.tharat-mobile-popup{transform:none!important}
 }
+
+/* Floating map guide */
+.tharat-ai-shell{position:fixed;right:20px;bottom:22px;z-index:2500;font-family:system-ui,sans-serif}
+.tharat-ai-launch{height:58px;width:58px;border-radius:50%;border:1px solid #68e9db;background:linear-gradient(145deg,#075b68,#071827);color:#9dfff0;font-size:28px;box-shadow:0 6px 32px #00d6c350;cursor:pointer}
+.tharat-ai-panel{position:absolute;right:0;bottom:72px;width:min(390px,calc(100vw - 24px));height:min(550px,calc(100dvh - 115px));display:flex;flex-direction:column;background:#071521;border:1px solid #247d89;border-radius:18px;box-shadow:0 12px 50px #000b;overflow:hidden;color:#e9f6fa}
+.tharat-ai-panel header{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid #23424e;background:#0c2431}
+.tharat-ai-panel header strong{display:block;color:#6ff1df;letter-spacing:.07em}.tharat-ai-panel header small{display:block;color:#91adba;margin-top:3px}.tharat-ai-panel button{cursor:pointer}
+.tharat-ai-panel header button{border:0;background:transparent;color:white;font-size:25px}
+.tharat-ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.tharat-ai-bubble{max-width:96%;align-self:flex-start;border:1px solid #254754;background:#102936;border-radius:13px;padding:11px 13px;color:#e4f2f5;font-size:13px;line-height:1.55;margin:0}
+.tharat-ai-bubble.mine{align-self:flex-end;background:#15505a;border-color:#278d92}
+.tharat-ai-results{display:flex;flex-direction:column;gap:5px;margin-top:10px}.tharat-ai-results button{border:1px solid #287a86;background:#092532;color:#8cf4e4;padding:7px;border-radius:8px;text-align:left;font-size:12px}
+.tharat-ai-chips{display:flex;gap:5px;flex-wrap:wrap;padding:8px 12px}.tharat-ai-chips button{background:#113441;border:1px solid #29616c;color:#a7e9e2;border-radius:20px;padding:6px 9px;font-size:11px}
+.tharat-ai-panel form{display:flex;padding:12px;gap:7px;border-top:1px solid #23424e}.tharat-ai-panel input{flex:1;min-width:0;background:#071b27;border:1px solid #286070;color:white;padding:11px;border-radius:9px}.tharat-ai-panel form button{border:0;background:#35a9a4;color:#03161b;border-radius:9px;padding:0 15px;font-size:20px}
+.tharat-ai-panel footer{text-align:center;color:#7e9da9;font-size:10px;padding:0 10px 10px}
+@media(max-width:600px){.tharat-ai-shell{right:12px;bottom:12px}.tharat-ai-launch{width:50px;height:50px}.tharat-ai-panel{bottom:62px}}
