@@ -741,3 +741,11 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .tharat-ai-panel form{display:flex;padding:12px;gap:7px;border-top:1px solid #23424e}.tharat-ai-panel input{flex:1;min-width:0;background:#071b27;border:1px solid #286070;color:white;padding:11px;border-radius:9px}.tharat-ai-panel form button{border:0;background:#35a9a4;color:#03161b;border-radius:9px;padding:0 15px;font-size:20px}
 .tharat-ai-panel footer{text-align:center;color:#7e9da9;font-size:10px;padding:0 10px 10px}
 @media(max-width:600px){.tharat-ai-shell{right:12px;bottom:12px}.tharat-ai-launch{width:50px;height:50px}.tharat-ai-panel{bottom:62px}}
+
+.tharat-assistant-filter-banner{position:absolute;z-index:1100;top:78px;left:50%;transform:translateX(-50%);display:flex;gap:12px;align-items:center;max-width:calc(100vw - 24px);background:#0a2432ed;border:1px solid #3bc5b9;border-radius:12px;padding:9px 13px;color:#b7fff0;box-shadow:0 8px 25px #0008;font:600 12px system-ui,sans-serif}
+.tharat-assistant-filter-banner button{white-space:nowrap;border:1px solid #3bc5b9;border-radius:8px;background:#15505b;color:#eaffff;padding:7px 10px;cursor:pointer}
+@media(max-width:600px){.tharat-assistant-filter-banner{top:110px;width:max-content;font-size:11px;gap:6px;padding:6px}}
+
+.tharat-assistant-filter-banner{position:absolute;z-index:1100;top:78px;left:50%;transform:translateX(-50%);display:flex;gap:12px;align-items:center;max-width:calc(100vw - 24px);background:#0a2432ed;border:1px solid #3bc5b9;border-radius:12px;padding:9px 13px;color:#b7fff0;box-shadow:0 8px 25px #0008;font:600 12px system-ui,sans-serif}
+.tharat-assistant-filter-banner button{white-space:nowrap;border:1px solid #3bc5b9;border-radius:8px;background:#15505b;color:#eaffff;padding:7px 10px;cursor:pointer}
+@media(max-width:600px){.tharat-assistant-filter-banner{top:110px;width:max-content;font-size:11px;gap:6px;padding:6px}}

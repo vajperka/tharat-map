@@ -31,8 +31,8 @@ export default function TharatAssistant(){
  return {p,score};
  }).filter(x=>x.score>0);
  const max=Math.max(0,...matches.map(x=>x.score));
- const found=matches.filter(x=>x.score===max).slice(0,30).map(x=>x.p);
- const text=found.length?(cs?`Našel jsem ${matches.filter(x=>x.score===max).length} odpovídajících záznamů. Zobrazuji až 30 lokací. Klikni na souřadnice pro přiblížení mapy. Jde o jednorázový sken, nikoliv zaručené aktuální spawny.`:`I found ${matches.filter(x=>x.score===max).length} matching records and show up to 30 locations. Click coordinates to zoom in. Server-scan positions are not guaranteed current spawns.`):(cs?"Pro tento dotaz nemám v mapových datech ověřenou odpověď. Zkus konkrétní název dinosaura nebo suroviny.":"I couldn't find this in the map data. Try a specific creature or resource name.");
+ const found=matches.filter(x=>x.score===max).map(x=>x.p);
+ const text=found.length?(cs?`Našel jsem ${matches.filter(x=>x.score===max).length} odpovídajících záznamů. Na mapě zobrazuji pouze odpovídající lokace. Klikni na souřadnice pro přiblížení mapy. Jde o jednorázový sken, nikoliv zaručené aktuální spawny.`:`I found ${matches.filter(x=>x.score===max).length} matching records and show only matching locations on the map. Click coordinates to zoom in. Server-scan positions are not guaranteed current spawns.`):(cs?"Pro tento dotaz nemám v mapových datech ověřenou odpověď. Zkus konkrétní název dinosaura nebo suroviny.":"I couldn't find this in the map data. Try a specific creature or resource name.");
  setChat(old=>[...old,{role:"user",text:raw},{role:"assistant",text,points:found}]);setBusy(false);
  if(found.length)window.dispatchEvent(new CustomEvent("tharat-assistant-locations",{detail:{points:found}}));
  }
