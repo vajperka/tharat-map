@@ -4,6 +4,7 @@ export default function VisitorAnalytics(){
  useEffect(()=>{
   try{
    // One visit per browser tab session; no personal identifiers or IP addresses collected.
+   // Retry failed writes on reload; never mark a visit as recorded on an error.
    if(sessionStorage.getItem("tharat-visit-recorded")==="1")return;
    const key="tharat-visit-id";
    let id=sessionStorage.getItem(key);
