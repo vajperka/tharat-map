@@ -749,3 +749,8 @@ html{scroll-behavior:smooth}body:before{content:"";position:fixed;inset:0;pointe
 .tharat-assistant-filter-banner{position:absolute;z-index:1100;top:78px;left:50%;transform:translateX(-50%);display:flex;gap:12px;align-items:center;max-width:calc(100vw - 24px);background:#0a2432ed;border:1px solid #3bc5b9;border-radius:12px;padding:9px 13px;color:#b7fff0;box-shadow:0 8px 25px #0008;font:600 12px system-ui,sans-serif}
 .tharat-assistant-filter-banner button{white-space:nowrap;border:1px solid #3bc5b9;border-radius:8px;background:#15505b;color:#eaffff;padding:7px 10px;cursor:pointer}
 @media(max-width:600px){.tharat-assistant-filter-banner{top:110px;width:max-content;font-size:11px;gap:6px;padding:6px}}
+
+/* AI assistant: anchor to left edge of map, avoiding mobile filter toggle */
+.tharat-ai-shell{left:calc(var(--sidebar) + 18px);right:auto;bottom:20px}
+.tharat-ai-panel{left:0;right:auto}
+@media(max-width:900px){.tharat-ai-shell{left:12px;right:auto;bottom:78px}.tharat-ai-panel{left:0;right:auto;bottom:62px}}
